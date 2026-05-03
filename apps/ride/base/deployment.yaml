@@ -12,6 +12,22 @@ spec:
       labels:
         app: ride-service
     spec:
+      initContainers:
+        - name: copy-migrations
+          image: vroom-mvp/ride-service:latest
+          command: ["sh", "-c", "cp -r /app/migrations/* /shared-migrations/"]
+          volumeMounts:
+            - name: shared-migrations
+              mountPath: /shared-migrations
+        - name: migrate
+          image: migrate/migrate:v4.16.2
+          args:
+            - "-path=file:///shared-migrations/"
+            - "-database=postgres://ride_svc:vroom_dev@postgres.platform.svc.cluster.local:5432/vroom?sslmode=disable&search_path=rides&x-migrations-table=ride_migrations"
+            - "up"
+          volumeMounts:
+            - name: shared-migrations
+              mountPath: /shared-migrations
       containers:
         - name: ride-service
           image: vroom-mvp/ride-service:latest
@@ -20,6 +36,14 @@ spec:
           env:
             - name: DB_HOST
               value: "postgres.platform.svc.cluster.local"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: "ride_svc"
+            - name: DB_PASSWORD
+              value: "vroom_dev"
+            - name: DB_NAME
+              value: "vroom"
             - name: REDIS_ADDR
               value: "redis.platform.svc.cluster.local:6379"
           livenessProbe:
@@ -32,3 +56,6 @@ spec:
               path: /readyz
               port: 8080
             initialDelaySeconds: 5
+      volumes:
+        - name: shared-migrations
+          emptyDir: {}

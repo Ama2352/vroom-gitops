@@ -12,6 +12,24 @@ spec:
       labels:
         app: user-service
     spec:
+      initContainers:
+        # Step 1: Copy migrations from YOUR image to a shared volume
+        - name: copy-migrations
+          image: vroom-mvp/user-service:latest
+          command: ["sh", "-c", "cp -r /app/migrations/* /shared-migrations/"]
+          volumeMounts:
+            - name: shared-migrations
+              mountPath: /shared-migrations
+        # Step 2: Run the migration tool using the shared volume
+        - name: migrate
+          image: migrate/migrate:v4.16.2
+          args:
+            - "-path=file:///shared-migrations/"
+            - "-database=postgres://user_svc:vroom_dev@postgres.platform.svc.cluster.local:5432/vroom?sslmode=disable&search_path=users&x-migrations-table=user_migrations"
+            - "up"
+          volumeMounts:
+            - name: shared-migrations
+              mountPath: /shared-migrations
       containers:
         - name: user-service
           image: vroom-mvp/user-service:latest
@@ -22,6 +40,12 @@ spec:
               value: "postgres.platform.svc.cluster.local"
             - name: DB_PORT
               value: "5432"
+            - name: DB_USER
+              value: "user_svc"
+            - name: DB_PASSWORD
+              value: "vroom_dev"
+            - name: DB_NAME
+              value: "vroom"
           livenessProbe:
             httpGet:
               path: /health
@@ -32,3 +56,6 @@ spec:
               path: /health
               port: 8080
             initialDelaySeconds: 5
+      volumes:
+        - name: shared-migrations
+          emptyDir: {}

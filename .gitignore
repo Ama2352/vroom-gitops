@@ -1,0 +1,11 @@
+# Logs and temporary files
+*.log
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Kustomize build artifacts (if any)
+.kustomization

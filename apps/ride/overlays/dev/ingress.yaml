@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ride-service
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: api.vroom.local
+      http:
+        paths:
+          - path: /v1/trips
+            pathType: Prefix
+            backend:
+              service:
+                name: ride-service
+                port:
+                  number: 8080

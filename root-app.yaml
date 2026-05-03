@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vroom-platform-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/AmaDev/RideHailing.git # User to update this
+    targetRevision: HEAD
+    path: k3s-version/vroom-gitops/environments/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

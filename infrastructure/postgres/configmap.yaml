@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init
+  namespace: platform
+data:
+  init.sql: |
+    CREATE SCHEMA IF NOT EXISTS users;
+    CREATE SCHEMA IF NOT EXISTS rides;
+    CREATE SCHEMA IF NOT EXISTS notifications;
+    
+    -- Optional: Add extensions or initial data here

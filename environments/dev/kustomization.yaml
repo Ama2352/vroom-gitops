@@ -6,5 +6,7 @@ resources:
   - ../../apps/ride/overlays/dev
   - ../../apps/dispatch/overlays/dev
   - ../../apps/notification/overlays/dev
-
-# In Phase 6, we will add infrastructure (Redis/Postgres) here as well
+  - ../../infrastructure/namespace.yaml
+  - ../../infrastructure/postgres
+  - ../../infrastructure/redis
+  - ../../infrastructure/observability

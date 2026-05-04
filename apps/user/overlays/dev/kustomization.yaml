@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - ../../base
   - ingress.yaml
+  - secrets/sealed-secret.yaml
 
 patches:
   - path: patches/resource_limits.yaml

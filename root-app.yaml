@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/AmaDev/RideHailing.git # User to update this
+    repoURL: https://gitlab.com/vroom-app/gitops.git
     targetRevision: HEAD
     path: k3s-version/vroom-gitops/environments/dev
   destination:

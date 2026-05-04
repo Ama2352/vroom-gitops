@@ -23,8 +23,14 @@ spec:
           image: migrate/migrate:v4.16.2
           args:
             - "-path=file:///shared-migrations/"
-            - "-database=postgres://ride_svc:vroom_dev@postgres.platform.svc.cluster.local:5432/vroom?sslmode=disable&search_path=rides&x-migrations-table=ride_migrations"
+            - "-database=$(DATABASE_URL)"
             - "up"
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ride-db-secrets
+                  key: database_url
           volumeMounts:
             - name: shared-migrations
               mountPath: /shared-migrations
@@ -41,7 +47,10 @@ spec:
             - name: DB_USER
               value: "ride_svc"
             - name: DB_PASSWORD
-              value: "vroom_dev"
+              valueFrom:
+                secretKeyRef:
+                  name: ride-db-secrets
+                  key: password
             - name: DB_NAME
               value: "vroom"
             - name: REDIS_ADDR

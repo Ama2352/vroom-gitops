@@ -13,3 +13,7 @@ namePrefix: dev-
 labels:
   - pairs:
       env: dev
+images:
+  - name: vroom-mvp/ride-service
+    newName: ama2352/vroom-mvp-ride-service
+    newTag: 119d9301

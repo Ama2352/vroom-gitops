@@ -9,3 +9,7 @@ resources:
 labels:
   - pairs:
       app: ride-service
+images:
+  - name: ama2352/vroom-mvp-ride
+    newName: ama2352/vroom-mvp-ride
+    newTag: 5387a4d0

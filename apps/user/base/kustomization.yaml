@@ -3,10 +3,14 @@ kind: Kustomization
 namespace: vroom
 
 resources:
-  - deployment.yaml
-  - service.yaml
-  - secrets/sealed-secret.yaml
+- deployment.yaml
+- service.yaml
+- secrets/sealed-secret.yaml
 
 labels:
-  - pairs:
-      app: user-service
+- pairs:
+    app: user-service
+images:
+- name: ama2352/vroom-mvp-user
+  newName: ama2352/vroom-mvp-user
+  newTag: 5387a4d0

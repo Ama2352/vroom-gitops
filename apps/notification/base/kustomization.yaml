@@ -3,10 +3,14 @@ kind: Kustomization
 namespace: vroom
 
 resources:
-  - deployment.yaml
-  - service.yaml
-  - secrets/sealed-secret.yaml
+- deployment.yaml
+- service.yaml
+- secrets/sealed-secret.yaml
 
 labels:
-  - pairs:
-      app: notification-service
+- pairs:
+    app: notification-service
+images:
+- name: ama2352/vroom-mvp-notification
+  newName: ama2352/vroom-mvp-notification
+  newTag: 5387a4d0

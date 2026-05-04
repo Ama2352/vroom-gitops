@@ -3,9 +3,13 @@ kind: Kustomization
 namespace: vroom
 
 resources:
-  - deployment.yaml
-  - service.yaml
+- deployment.yaml
+- service.yaml
 
 labels:
-  - pairs:
-      app: dispatch-service
+- pairs:
+    app: dispatch-service
+images:
+- name: ama2352/vroom-mvp-dispatch
+  newName: ama2352/vroom-mvp-dispatch
+  newTag: 5387a4d0

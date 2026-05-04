@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/Ama2352/vroom-gitops.git
     targetRevision: HEAD
-    path: k3s-version/vroom-gitops/environments/dev
+    path: environments/dev
   destination:
     server: https://kubernetes.default.svc
     namespace: default

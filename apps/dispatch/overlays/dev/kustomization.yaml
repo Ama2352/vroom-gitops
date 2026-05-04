@@ -5,10 +5,12 @@ resources:
 - ../../base
 - ingress.yaml
 
+namespace: vroom-dev
+
 patches:
 - path: patches/resource_limits.yaml
 
-namePrefix: dev-
+
 labels:
 - pairs:
     env: dev

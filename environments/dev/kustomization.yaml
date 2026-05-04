@@ -6,7 +6,4 @@ resources:
   - ../../apps/ride/overlays/dev
   - ../../apps/dispatch/overlays/dev
   - ../../apps/notification/overlays/dev
-  - ../../infrastructure/namespace.yaml
-  - ../../infrastructure/postgres
-  - ../../infrastructure/redis
-  - ../../infrastructure/observability
+  - ../../infrastructure

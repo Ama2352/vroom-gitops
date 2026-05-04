@@ -6,5 +6,6 @@ resources:
   - deployment.yaml
   - service.yaml
 
-commonLabels:
-  app: dispatch-service
+labels:
+  - pairs:
+      app: dispatch-service

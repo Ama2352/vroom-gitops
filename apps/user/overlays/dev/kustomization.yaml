@@ -5,9 +5,10 @@ resources:
   - ../../base
   - ingress.yaml
 
-patchesStrategicMerge:
-  - patches/resource_limits.yaml
+patches:
+  - path: patches/resource_limits.yaml
 
 namePrefix: dev-
-commonLabels:
-  env: dev
+labels:
+  - pairs:
+      env: dev

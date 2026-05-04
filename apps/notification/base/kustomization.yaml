@@ -7,5 +7,6 @@ resources:
   - service.yaml
   - secrets/sealed-secret.yaml
 
-commonLabels:
-  app: notification-service
+labels:
+  - pairs:
+      app: notification-service

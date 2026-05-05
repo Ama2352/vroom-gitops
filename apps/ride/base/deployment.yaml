@@ -15,15 +15,17 @@ spec:
       initContainers:
         - name: copy-migrations
           image: vroom-mvp/ride-service:latest
-          command: ["sh", "-c", "cp -r /app/migrations/* /shared-migrations/"]
+          command: ["sh", "-c", "cp -av /app/migrations/. /shared-migrations/"]
           volumeMounts:
             - name: shared-migrations
               mountPath: /shared-migrations
         - name: migrate
           image: migrate/migrate:v4.16.2
           args:
-            - "-path=file:///shared-migrations/"
-            - "-database=$(DATABASE_URL)"
+            - "-path"
+            - "file:///shared-migrations"
+            - "-database"
+            - "$(DATABASE_URL)"
             - "up"
           env:
             - name: DATABASE_URL

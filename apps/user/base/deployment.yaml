@@ -16,7 +16,7 @@ spec:
         # Step 1: Copy migrations from YOUR image to a shared volume
         - name: copy-migrations
           image: vroom-mvp/user-service:latest
-          command: ["sh", "-c", "cp -r /app/migrations/* /shared-migrations/"]
+          command: ["sh", "-c", "cp -av /app/migrations/. /shared-migrations/"]
           volumeMounts:
             - name: shared-migrations
               mountPath: /shared-migrations
@@ -24,8 +24,10 @@ spec:
         - name: migrate
           image: migrate/migrate:v4.16.2
           args:
-            - "-path=file:///shared-migrations/"
-            - "-database=$(DATABASE_URL)"
+            - "-path"
+            - "file:///shared-migrations"
+            - "-database"
+            - "$(DATABASE_URL)"
             - "up"
           env:
             - name: DATABASE_URL

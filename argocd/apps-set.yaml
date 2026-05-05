@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: vroom-apps
+  namespace: argocd
+spec:
+  generators:
+    - git:
+        repoURL: https://github.com/Ama2352/vroom-gitops.git
+        revision: HEAD
+        directories:
+          - path: apps/*
+  template:
+    metadata:
+      name: 'vroom-{{path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/Ama2352/vroom-gitops.git
+        targetRevision: HEAD
+        path: '{{path}}/overlays/dev'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: vroom-dev
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

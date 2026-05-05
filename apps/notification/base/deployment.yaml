@@ -15,18 +15,15 @@ spec:
       initContainers:
         - name: copy-migrations
           image: vroom-mvp/notification-service:latest
-          command: ["sh", "-c", "cp -av /app/migrations/. /shared-migrations/"]
+          command: ["sh", "-c", "cp -av /app/migrations/. /migrations/"]
           volumeMounts:
             - name: shared-migrations
-              mountPath: /shared-migrations
+              mountPath: /migrations
         - name: migrate
           image: migrate/migrate:v4.16.2
+          command: ["sh", "-c"]
           args:
-            - "-path"
-            - "file:///shared-migrations"
-            - "-database"
-            - "$(DATABASE_URL)"
-            - "up"
+            - "ls -la /migrations && /migrate -path file:///migrations -database \"$DATABASE_URL\" up"
           env:
             - name: DATABASE_URL
               valueFrom:
@@ -35,7 +32,7 @@ spec:
                   key: database_url
           volumeMounts:
             - name: shared-migrations
-              mountPath: /shared-migrations
+              mountPath: /migrations
       containers:
         - name: notification-service
           image: vroom-mvp/notification-service:latest

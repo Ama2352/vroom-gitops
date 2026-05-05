@@ -23,7 +23,7 @@ spec:
           image: migrate/migrate:v4.16.2
           command: ["sh", "-c"]
           args:
-            - "cd /migrations && /migrate -path . -database \"$DATABASE_URL\" up"
+            - "cd /migrations && /migrate -path file://. -database \"$DATABASE_URL\" up"
           env:
             - name: DATABASE_URL
               valueFrom:

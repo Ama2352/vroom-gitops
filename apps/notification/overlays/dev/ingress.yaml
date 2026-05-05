@@ -4,20 +4,13 @@ metadata:
   name: notification-service
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: vroom-dev-strip-service-prefix@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
-    - host: api.vroom.local
-      http:
+    - http:
         paths:
-          - path: /v1/history
-            pathType: Prefix
-            backend:
-              service:
-                name: notification-service
-                port:
-                  number: 8080
-          - path: /v1/ws
+          - path: /notification-service
             pathType: Prefix
             backend:
               service:

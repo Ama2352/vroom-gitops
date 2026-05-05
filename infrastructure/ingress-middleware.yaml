@@ -1,0 +1,16 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-service-prefix
+  namespace: vroom-dev
+spec:
+  stripPrefix:
+    prefixes:
+      - /user-service
+      - /ride-service
+      - /notification-service
+      - /dispatch-service
+      - /prometheus
+      - /grafana
+      - /jaeger
+      - /argocd

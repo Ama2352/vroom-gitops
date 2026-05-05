@@ -5,33 +5,27 @@ metadata:
   namespace: platform
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: vroom-dev-strip-service-prefix@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
-    - host: grafana.vroom.local
-      http:
+    - http:
         paths:
-          - path: /
+          - path: /grafana
             pathType: Prefix
             backend:
               service:
                 name: grafana
                 port:
                   number: 3000
-    - host: jaeger.vroom.local
-      http:
-        paths:
-          - path: /
+          - path: /jaeger
             pathType: Prefix
             backend:
               service:
                 name: jaeger
                 port:
                   number: 16686
-    - host: prometheus.vroom.local
-      http:
-        paths:
-          - path: /
+          - path: /prometheus
             pathType: Prefix
             backend:
               service:

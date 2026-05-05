@@ -1,20 +1,22 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: user-service
+  name: argocd-server-ingress
+  namespace: argocd
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
-    # Apply the path stripping middleware
+    # ArgoCD often needs SSL passthrough or specific headers, 
+    # but for local dev over HTTP this should work with the middleware.
     traefik.ingress.kubernetes.io/router.middlewares: vroom-dev-strip-service-prefix@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
     - http:
         paths:
-          - path: /user-service
+          - path: /argocd
             pathType: Prefix
             backend:
               service:
-                name: user-service
+                name: argocd-server
                 port:
-                  number: 8080
+                  number: 80

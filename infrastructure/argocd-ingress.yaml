@@ -5,9 +5,6 @@ metadata:
   namespace: argocd
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
-    # ArgoCD often needs SSL passthrough or specific headers, 
-    # but for local dev over HTTP this should work with the middleware.
-    traefik.ingress.kubernetes.io/router.middlewares: vroom-dev-strip-service-prefix@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:

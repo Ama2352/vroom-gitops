@@ -4,13 +4,13 @@ metadata:
   name: dispatch-service
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: vroom-dev-strip-service-prefix@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
-    - host: api.vroom.local
-      http:
+    - http:
         paths:
-          - path: /v1/dispatch
+          - path: /dispatch-service
             pathType: Prefix
             backend:
               service:

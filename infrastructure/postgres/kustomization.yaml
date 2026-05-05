@@ -6,3 +6,6 @@ resources:
   - deployment.yaml
   - configmap.yaml
   - pvc.yaml
+  - secrets/user-db-secrets.yaml
+  - secrets/ride-db-secrets.yaml
+  - secrets/notification-db-secrets.yaml

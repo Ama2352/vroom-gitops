@@ -4,34 +4,49 @@ metadata:
   name: postgres-init
   namespace: platform
 data:
-  init.sql: |
-    -- Create schemas for each service
-    CREATE SCHEMA IF NOT EXISTS users;
-    CREATE SCHEMA IF NOT EXISTS rides;
-    CREATE SCHEMA IF NOT EXISTS notifications;
-    CREATE SCHEMA IF NOT EXISTS dispatch;
+  init.sh: |
+    #!/bin/bash
+    set -e
 
-    -- Create service-specific users
-    CREATE USER user_svc WITH PASSWORD 'vroom_dev';
-    GRANT USAGE ON SCHEMA users TO user_svc;
-    GRANT CREATE ON SCHEMA users TO user_svc;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA users GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO user_svc;
-    ALTER USER user_svc SET search_path TO users, public;
+    # This script runs inside the postgres container during initialization.
+    # It uses environment variables provided via SealedSecrets to create users securely.
 
-    CREATE USER ride_svc WITH PASSWORD 'vroom_dev';
-    GRANT USAGE ON SCHEMA rides TO ride_svc;
-    GRANT CREATE ON SCHEMA rides TO ride_svc;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA rides GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO ride_svc;
-    ALTER USER ride_svc SET search_path TO rides, public;
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+      -- Create schemas
+      CREATE SCHEMA IF NOT EXISTS users;
+      CREATE SCHEMA IF NOT EXISTS rides;
+      CREATE SCHEMA IF NOT EXISTS notifications;
+      CREATE SCHEMA IF NOT EXISTS dispatch;
 
-    CREATE USER notification_svc WITH PASSWORD 'vroom_dev';
-    GRANT USAGE ON SCHEMA notifications TO notification_svc;
-    GRANT CREATE ON SCHEMA notifications TO notification_svc;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA notifications GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO notification_svc;
-    ALTER USER notification_svc SET search_path TO notifications, public;
+      -- Create users using environment variables
+      DO \$\$
+      BEGIN
+        IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'user_svc') THEN
+          CREATE USER user_svc WITH PASSWORD '$USER_SVC_PASSWORD';
+        END IF;
+        
+        IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'ride_svc') THEN
+          CREATE USER ride_svc WITH PASSWORD '$RIDE_SVC_PASSWORD';
+        END IF;
 
-    CREATE USER dispatch_svc WITH PASSWORD 'vroom_dev';
-    GRANT USAGE ON SCHEMA dispatch TO dispatch_svc;
-    GRANT CREATE ON SCHEMA dispatch TO dispatch_svc;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA dispatch GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO dispatch_svc;
-    ALTER USER dispatch_svc SET search_path TO dispatch, public;
+        IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'notification_svc') THEN
+          CREATE USER notification_svc WITH PASSWORD '$NOTIFICATION_SVC_PASSWORD';
+        END IF;
+
+        IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'dispatch_svc') THEN
+          CREATE USER dispatch_svc WITH PASSWORD '$DISPATCH_SVC_PASSWORD';
+        END IF;
+      END
+      \$\$;
+
+      -- Grants
+      GRANT USAGE, CREATE ON SCHEMA users TO user_svc;
+      GRANT USAGE, CREATE ON SCHEMA rides TO ride_svc;
+      GRANT USAGE, CREATE ON SCHEMA notifications TO notification_svc;
+      GRANT USAGE, CREATE ON SCHEMA dispatch TO dispatch_svc;
+
+      ALTER USER user_svc SET search_path TO users, public;
+      ALTER USER ride_svc SET search_path TO rides, public;
+      ALTER USER notification_svc SET search_path TO notifications, public;
+      ALTER USER dispatch_svc SET search_path TO dispatch, public;
+    EOSQL

@@ -25,6 +25,24 @@ spec:
               value: vroom
             - name: POSTGRES_PASSWORD
               value: vroom_dev
+            # Correctly mapped to your service secret names and keys
+            - name: USER_SVC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: user-db-secrets
+                  key: password
+            - name: RIDE_SVC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ride-db-secrets
+                  key: password
+            - name: NOTIFICATION_SVC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: notification-db-secrets
+                  key: password
+            - name: DISPATCH_SVC_PASSWORD
+              value: "vroom_dev"
           volumeMounts:
             - name: pgdata
               mountPath: /var/lib/postgresql/data
@@ -42,14 +60,4 @@ spec:
         - name: init-scripts
           configMap:
             name: postgres-init
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres
-  namespace: platform
-spec:
-  ports:
-    - port: 5432
-  selector:
-    app: postgres
+            defaultMode: 0755

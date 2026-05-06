@@ -22,6 +22,7 @@ spec:
             - "--storage.tsdb.path=/prometheus"
             - "--storage.tsdb.retention.time=1d"
             - "--web.external-url=/prometheus"
+            - "--web.enable-lifecycle"
           ports:
             - containerPort: 9090
           volumeMounts:

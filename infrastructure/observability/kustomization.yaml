@@ -5,5 +5,11 @@ resources:
   - jaeger.yaml
   - prometheus.yaml
   - prometheus-config.yaml
+  - prometheus-rules.yaml
+  - alertmanager.yaml
+  - node-exporter.yaml
+  - kube-state-metrics.yaml
+  - grafana-provisioning.yaml
+  - grafana-dashboards.yaml
   - grafana.yaml
   - ingress.yaml

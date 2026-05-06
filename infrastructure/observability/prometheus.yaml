@@ -26,6 +26,8 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/prometheus
+            - name: rules
+              mountPath: /etc/prometheus-rules
           resources:
             limits:
               memory: 512Mi
@@ -35,6 +37,9 @@ spec:
         - name: config
           configMap:
             name: prometheus-config
+        - name: rules
+          configMap:
+            name: prometheus-rules
 ---
 apiVersion: v1
 kind: Service

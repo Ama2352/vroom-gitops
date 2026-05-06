@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+  namespace: platform
+data:
+  # To add real dashboards, download JSON files from Grafana.com (e.g., ID 1860 for Node Exporter)
+  # and place their contents here as key-value pairs.
+  # Example:
+  # node-exporter.json: |
+  #   { ... json content ... }
+  placeholder.json: |
+    {
+      "title": "Placeholder Dashboard",
+      "panels": []
+    }

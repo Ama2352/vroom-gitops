@@ -18,4 +18,4 @@ labels:
 images:
 - name: vroom-mvp/user-service
   newName: ama2352/vroom-mvp-user-service
-  newTag: 8dca14fe
+  newTag: 2ac06db6

@@ -18,4 +18,4 @@ labels:
 images:
 - name: vroom-mvp/ride-service
   newName: ama2352/vroom-mvp-ride-service
-  newTag: edfd6335
+  newTag: 8dca14fe

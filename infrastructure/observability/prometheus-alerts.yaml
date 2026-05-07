@@ -1,0 +1,194 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: vroom-services-alerts
+  namespace: monitoring
+spec:
+  groups:
+    - name: vroom-services
+      interval: 30s
+      rules:
+        # ==================== Node Alerts ====================
+        
+        - alert: NodeMemoryHigh
+          expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+          for: 5m
+          labels:
+            severity: warning
+            component: node
+          annotations:
+            summary: "High memory usage on {{ $labels.node }}"
+            description: "Node {{ $labels.node }} memory usage is {{ $value | humanizePercentage }}. Available memory is low."
+
+        - alert: NodeMemoryCritical
+          expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 95
+          for: 2m
+          labels:
+            severity: critical
+            component: node
+          annotations:
+            summary: "CRITICAL: Node memory almost full on {{ $labels.node }}"
+            description: "Node {{ $labels.node }} memory usage is {{ $value | humanizePercentage }}. Immediate action required!"
+
+        - alert: NodeDiskLow
+          expr: (node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lowerfs|squashfs|vfat|fuse"} / node_filesystem_size_bytes) < 0.2
+          for: 5m
+          labels:
+            severity: warning
+            component: node
+          annotations:
+            summary: "Low disk space on {{ $labels.device }}"
+            description: "Disk {{ $labels.device }} on {{ $labels.node }} has only {{ $value | humanizePercentage }} available."
+
+        - alert: NodeDiskVeryLow
+          expr: (node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lowerfs|squashfs|vfat|fuse"} / node_filesystem_size_bytes) < 0.1
+          for: 2m
+          labels:
+            severity: critical
+            component: node
+          annotations:
+            summary: "CRITICAL: Disk space critically low on {{ $labels.device }}"
+            description: "Disk {{ $labels.device }} has only {{ $value | humanizePercentage }} available!"
+
+        - alert: NodeCPUHigh
+          expr: (100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 80
+          for: 10m
+          labels:
+            severity: warning
+            component: node
+          annotations:
+            summary: "High CPU usage on {{ $labels.node }}"
+            description: "Node {{ $labels.node }} CPU usage is {{ $value | humanize }}%"
+
+        # ==================== Kubernetes Cluster Alerts ====================
+
+        - alert: KubernetesNodeNotReady
+          expr: kube_node_status_condition{condition="Ready",status="true"} == 0
+          for: 5m
+          labels:
+            severity: critical
+            component: kubernetes
+          annotations:
+            summary: "Kubernetes node not ready (instance {{ $labels.node }})"
+            description: "Node {{ $labels.node }} has been unready for more than 5 minutes."
+
+        - alert: KubernetesPodCrashLooping
+          expr: rate(kube_pod_container_status_restarts_total[15m]) > 0.1
+          for: 5m
+          labels:
+            severity: warning
+            component: kubernetes
+          annotations:
+            summary: "Kubernetes pod crash looping (instance {{ $labels.pod }})"
+            description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is crash looping. Restart rate: {{ $value }} restarts/min"
+
+        - alert: KubernetesPodNotHealthy
+          expr: min_over_time(sum by (namespace, pod) (kube_pod_status_phase{phase=~"Pending|Unknown|Failed"})[15m:1m]) > 0
+          for: 15m
+          labels:
+            severity: warning
+            component: kubernetes
+          annotations:
+            summary: "Kubernetes pod not healthy (instance {{ $labels.pod }})"
+            description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} has been in a non-running state for more than 15 minutes."
+
+        - alert: KubernetesStatefulsetReplicasMismatch
+          expr: |
+            kube_statefulset_status_replicas_ready{} != kube_statefulset_status_replicas{}
+          for: 10m
+          labels:
+            severity: warning
+            component: kubernetes
+          annotations:
+            summary: "Kubernetes StatefulSet replicas mismatch (instance {{ $labels.statefulset }})"
+            description: "StatefulSet {{ $labels.namespace }}/{{ $labels.statefulset }} has not matched the expected number of replicas for more than 10 minutes."
+
+        # ==================== Application Alerts (Vroom Services) ====================
+
+        - alert: HighHTTPErrorRate
+          expr: |
+            (sum(rate(http_requests_total{status=~"5.."}[5m])) by (job) / 
+             sum(rate(http_requests_total[5m])) by (job)) > 0.05
+          for: 5m
+          labels:
+            severity: warning
+            component: application
+          annotations:
+            summary: "High HTTP 5xx error rate on {{ $labels.job }}"
+            description: "Service {{ $labels.job }} has error rate of {{ $value | humanizePercentage }} (5xx errors). Check logs immediately."
+
+        - alert: ServiceDown
+          expr: up{job=~"ride.*|user.*|dispatch.*|notification.*"} == 0
+          for: 2m
+          labels:
+            severity: critical
+            component: application
+          annotations:
+            summary: "Service {{ $labels.job }} is DOWN"
+            description: "Service {{ $labels.job }} in namespace {{ $labels.namespace }} has been unreachable for 2 minutes."
+
+        - alert: HighHTTPResponseTime
+          expr: |
+            histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, job)) > 1
+          for: 10m
+          labels:
+            severity: warning
+            component: application
+          annotations:
+            summary: "High HTTP response time on {{ $labels.job }}"
+            description: "P99 response time for {{ $labels.job }} is {{ $value | humanizeDuration }}"
+
+        - alert: ServiceHighGoroutines
+          expr: |
+            go_goroutines{job=~"ride.*|user.*|dispatch.*|notification.*"} > 1000
+          for: 10m
+          labels:
+            severity: warning
+            component: application
+          annotations:
+            summary: "High goroutine count on {{ $labels.job }}"
+            description: "Service {{ $labels.job }} has {{ $value }} goroutines. Possible memory leak or resource exhaustion."
+
+        # ==================== Database Alerts ====================
+
+        - alert: PostgresDown
+          expr: pg_up{job="postgres"} == 0
+          for: 1m
+          labels:
+            severity: critical
+            component: database
+          annotations:
+            summary: "PostgreSQL is DOWN"
+            description: "PostgreSQL database is not responding."
+
+        - alert: PostgresConnectionsHigh
+          expr: sum(pg_stat_activity_count) > 80
+          for: 5m
+          labels:
+            severity: warning
+            component: database
+          annotations:
+            summary: "PostgreSQL connections high"
+            description: "PostgreSQL has {{ $value }} active connections (threshold: 80)"
+
+        # ==================== Redis Alerts ====================
+
+        - alert: RedisDown
+          expr: redis_up == 0
+          for: 1m
+          labels:
+            severity: critical
+            component: cache
+          annotations:
+            summary: "Redis is DOWN"
+            description: "Redis cache is not responding."
+
+        - alert: RedisMemoryHigh
+          expr: (redis_memory_used_bytes / redis_memory_max_bytes) * 100 > 85
+          for: 5m
+          labels:
+            severity: warning
+            component: cache
+          annotations:
+            summary: "Redis memory usage high"
+            description: "Redis memory usage is {{ $value | humanizePercentage }} of max."

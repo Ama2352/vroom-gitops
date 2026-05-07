@@ -1,0 +1,131 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-slack-config
+  namespace: monitoring
+data:
+  alertmanager.yml: |
+    global:
+      resolve_timeout: 5m
+      slack_api_url: 'YOUR_SLACK_WEBHOOK_URL_HERE'  # Replace with actual webhook
+
+    route:
+      receiver: 'slack-critical'
+      group_by: ['alertname', 'cluster', 'service']
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 12h
+      routes:
+        # Critical alerts go immediately to dedicated channel
+        - match:
+            severity: critical
+          receiver: 'slack-critical'
+          group_wait: 0s
+          repeat_interval: 4h
+
+        # Warning alerts batched and sent with 1-minute delay
+        - match:
+            severity: warning
+          receiver: 'slack-warnings'
+          group_wait: 60s
+          repeat_interval: 24h
+
+        # Node component alerts
+        - match:
+            component: node
+          receiver: 'slack-infrastructure'
+
+        # Kubernetes component alerts
+        - match:
+            component: kubernetes
+          receiver: 'slack-infrastructure'
+
+        # Application alerts
+        - match:
+            component: application
+          receiver: 'slack-applications'
+
+        # Database alerts
+        - match:
+            component: database
+          receiver: 'slack-infrastructure'
+
+        # Cache alerts
+        - match:
+            component: cache
+          receiver: 'slack-infrastructure'
+
+    receivers:
+      # Critical alerts - loud and immediate
+      - name: 'slack-critical'
+        slack_configs:
+          - channel: '#alerts-critical'
+            title: '🚨 CRITICAL ALERT: {{ .GroupLabels.alertname }}'
+            text: |
+              Severity: CRITICAL
+              {{ range .Alerts.Firing }}
+              • *{{ .Labels.alertname }}*
+              Instance: {{ .Labels.instance }}
+              {{ .Annotations.description }}
+              {{ end }}
+            color: 'danger'
+            send_resolved: true
+            actions:
+              - type: button
+                text: 'View Alert'
+                url: '{{ .ExternalURL }}/#/alerts'
+
+      # Warning alerts - standard channel
+      - name: 'slack-warnings'
+        slack_configs:
+          - channel: '#alerts-warnings'
+            title: '⚠️ WARNING: {{ .GroupLabels.alertname }}'
+            text: |
+              Severity: WARNING
+              {{ range .Alerts.Firing }}
+              • {{ .Labels.alertname }} on {{ .Labels.instance }}
+              {{ end }}
+            color: 'warning'
+            send_resolved: true
+
+      # Infrastructure alerts (nodes, k8s, database, cache)
+      - name: 'slack-infrastructure'
+        slack_configs:
+          - channel: '#alerts-infrastructure'
+            title: '🔧 Infrastructure Alert: {{ .GroupLabels.alertname }}'
+            text: |
+              {{ range .Alerts.Firing }}
+              *{{ .Labels.alertname }}*
+              Severity: {{ .Labels.severity }}
+              {{ .Annotations.description }}
+              {{ end }}
+            color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+            send_resolved: true
+
+      # Application alerts (ride, user, dispatch, notification services)
+      - name: 'slack-applications'
+        slack_configs:
+          - channel: '#alerts-applications'
+            title: '📱 App Alert: {{ .GroupLabels.alertname }}'
+            text: |
+              {{ range .Alerts.Firing }}
+              Service: {{ .Labels.job }}
+              {{ .Annotations.description }}
+              {{ end }}
+            color: '{{ if eq .Status "firing" }}warning{{ else }}good{{ end }}'
+            send_resolved: true
+
+    inhibit_rules:
+      # Don't send warning if critical is already firing
+      - source_match:
+          severity: 'critical'
+        target_match:
+          severity: 'warning'
+        equal: ['alertname', 'instance', 'job']
+
+      # Suppress node alerts if node is NotReady (expected)
+      - source_match:
+          alertname: 'KubernetesNodeNotReady'
+        target_match:
+          component: 'node'
+        equal: ['node']

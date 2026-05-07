@@ -1,0 +1,174 @@
+# Kube-Prometheus-Stack Values
+# Optimized for 9GB K3s cluster (3 nodes × 3GB RAM)
+# Resource allocation targets: ~25% cluster usage (~2.3GB)
+
+prometheus:
+  prometheusSpec:
+    # Resource requests/limits for memory-constrained environment
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+    
+    # Data retention: 7 days fits 1GB TSDB storage
+    retention: 7d
+    
+    # Compress WAL to reduce disk I/O
+    walCompression: true
+    
+    # Storage configuration (adjust size based on your VMs)
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-path  # Default k3s storage class
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 5Gi
+    
+    # Auto-discover ServiceMonitors and PrometheusRules from all namespaces
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
+    
+    ruleSelector: {}
+    ruleNamespaceSelector: {}
+    ruleSelectorNilUsesHelmValues: false
+    
+    # Pod discovery: scrape all pods with prometheus annotations
+    podMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelector: {}
+    podMonitorNamespaceSelector: {}
+    
+    # Adjust scrape interval based on cluster size
+    scrapeInterval: 30s
+    evaluationInterval: 30s
+
+grafana:
+  # Grafana UI credentials
+  adminPassword: "ChangeMeToSecurePassword!"
+  
+  # Persistence for dashboards and datasources
+  persistence:
+    enabled: true
+    type: pvc
+    size: 1Gi
+    storageClassName: local-path
+  
+  # Resource constraints
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+  
+  # Traefik ingress configuration
+  ingress:
+    enabled: false  # We'll create separate ingress file
+    # ingressClassName: traefik
+    # path: /grafana
+    # pathType: Prefix
+  
+  # Auto-enable all pre-built dashboards
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          url: http://kube-prometheus-stack-prometheus:9090
+          isDefault: true
+  
+  # Enable pre-built dashboards
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: 'default'
+          orgId: 1
+          folder: ''
+          type: file
+          disableDeletion: false
+          updateIntervalSeconds: 10
+          allowUiUpdates: true
+          options:
+            path: /var/lib/grafana/dashboards/default
+
+alertmanager:
+  alertmanagerSpec:
+    # Keep AlertManager lightweight
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+    
+    # Storage for alerts
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-path
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
+
+nodeExporter:
+  enabled: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+kubeStateMetrics:
+  enabled: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+prometheusOperator:
+  # The operator manages ServiceMonitor and PrometheusRule CRDs
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+# K3s uses different control plane exposure; disable standard metrics
+kubelet:
+  enabled: true
+  namespace: kube-system
+
+kubeControllerManager:
+  enabled: false  # K3s doesn't expose this via standard metrics
+
+kubeEtcd:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+kubeProxy:
+  enabled: false
+
+# Optional: Disable unused dashboards to save storage
+grafana-dashboards:
+  dashboards:
+    # Keep only essential dashboards
+    # Adjust based on your needs

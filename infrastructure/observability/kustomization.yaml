@@ -4,5 +4,4 @@ kind: Kustomization
 resources:
   - alertmanager-slack-config.yaml
   - monitoring-ingress.yaml
-  - prometheus-alerts.yaml
   - kube-prometheus-stack-chart.yaml

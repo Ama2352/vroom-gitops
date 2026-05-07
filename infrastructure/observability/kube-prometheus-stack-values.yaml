@@ -49,7 +49,7 @@ prometheus:
 
     # Subpath configuration for Ingress
     externalUrl: "/prometheus"
-    routePrefix: "/"
+    routePrefix: "/prometheus"
 
   additionalPrometheusRulesMap:
     vroom-alerts:
@@ -110,6 +110,10 @@ grafana:
       domain: ""
       root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
       serve_from_sub_path: true
+    auth.anonymous:
+      enabled: true
+      org_name: "Main Org."
+      org_role: "Admin"
 
   # Persistence for dashboards and datasources
   persistence:
@@ -138,7 +142,7 @@ alertmanager:
   alertmanagerSpec:
     # Subpath configuration
     externalUrl: "/alertmanager"
-    routePrefix: "/"
+    routePrefix: "/alertmanager"
 
     # Keep AlertManager lightweight
     resources:

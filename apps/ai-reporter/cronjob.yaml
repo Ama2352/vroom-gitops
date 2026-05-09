@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vroom-ai-reporter
+  namespace: vroom-dev
+spec:
+  schedule: "*/30 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: reporter
+            image: docker.io/ama2352/vroom-mvp-ai-reporter:latest
+            args: ["--mode=report"]
+            resources:
+              requests:
+                cpu: 50m
+                memory: 64Mi
+              limits:
+                cpu: 200m
+                memory: 128Mi
+            env:
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ai-reporter-secret
+                  key: gemini-api-key
+            - name: SLACK_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ai-reporter-secret
+                  key: slack-webhook-url
+            - name: PROMETHEUS_URL
+              value: "http://kube-prometheus-stack-prometheus.monitoring:9090"
+            - name: LOKI_URL
+              value: "http://loki-stack.monitoring:3100"
+            - name: TARGET_NAMESPACE
+              value: "vroom-dev"

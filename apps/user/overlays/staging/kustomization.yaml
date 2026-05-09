@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - ingress.yaml
+  - secrets/user-db-secrets.yaml   # SealedSecret for vroom-staging namespace — see vroom-infra/.secrets/INSTRUCTIONS.md
+
+namespace: vroom-staging
+
+patches:
+  - path: patches/resource_limits.yaml
+
+labels:
+  - pairs:
+      env: staging
+
+images:
+  - name: vroom-mvp/user-service
+    newName: ama2352/vroom-mvp-user-service
+    newTag: latest   # Kargo updates this tag during promotion

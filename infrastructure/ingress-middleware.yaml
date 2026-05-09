@@ -15,6 +15,32 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: strip-service-prefix
+  namespace: vroom-staging
+spec:
+  stripPrefix:
+    prefixes:
+      - /user-service
+      - /ride-service
+      - /notification-service
+      - /dispatch-service
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-service-prefix
+  namespace: vroom-prod
+spec:
+  stripPrefix:
+    prefixes:
+      - /user-service
+      - /ride-service
+      - /notification-service
+      - /dispatch-service
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-service-prefix
   namespace: argocd
 spec:
   stripPrefix:

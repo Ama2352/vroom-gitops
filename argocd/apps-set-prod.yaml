@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: vroom-apps-dev
+  name: vroom-apps-prod
   namespace: argocd
 spec:
   generators:
@@ -12,22 +12,22 @@ spec:
           - path: apps/*
   template:
     metadata:
-      name: 'vroom-dev-{{path.basename}}'
+      name: 'vroom-prod-{{path.basename}}'
       labels:
-        env: dev
-        kargo.akuity.io/stage: dev
+        env: prod
+        kargo.akuity.io/stage: prod
     spec:
       project: default
       source:
         repoURL: https://github.com/Ama2352/vroom-gitops.git
         targetRevision: HEAD
-        path: '{{path}}/overlays/dev'
+        path: '{{path}}/overlays/prod'
       destination:
         server: https://kubernetes.default.svc
-        namespace: vroom-dev
+        namespace: vroom-prod
       syncPolicy:
         automated:
-          prune: true
-          selfHeal: true
+          prune: false      # manual sync for prod — ArgoCD won't auto-apply prod changes
+          selfHeal: false
         syncOptions:
           - CreateNamespace=true

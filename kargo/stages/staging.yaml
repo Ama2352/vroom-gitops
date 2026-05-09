@@ -1,0 +1,49 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: staging
+  namespace: vroom
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: vroom-warehouse
+      sources:
+        stages: [dev]   # only promote Freight that passed dev verification
+  promotionMechanisms:
+    gitRepoUpdates:
+      - repoURL: https://github.com/Ama2352/vroom-gitops.git
+        writeBranch: main
+        kustomize:
+          images:
+            - image: ama2352/vroom-mvp-user-service
+              path: apps/user/overlays/staging
+            - image: ama2352/vroom-mvp-ride-service
+              path: apps/ride/overlays/staging
+            - image: ama2352/vroom-mvp-dispatch-service
+              path: apps/dispatch/overlays/staging
+            - image: ama2352/vroom-mvp-notification-service
+              path: apps/notification/overlays/staging
+            - image: ama2352/vroom-mvp-frontend
+              path: apps/frontend/overlays/staging
+    argoCDAppUpdates:
+      - appName: vroom-staging-user
+        appNamespace: argocd
+      - appName: vroom-staging-ride
+        appNamespace: argocd
+      - appName: vroom-staging-dispatch
+        appNamespace: argocd
+      - appName: vroom-staging-notification
+        appNamespace: argocd
+      - appName: vroom-staging-frontend
+        appNamespace: argocd
+  verification:
+    analysisTemplates:
+      - name: prometheus-checks
+        args:
+          - name: target-namespace
+            value: vroom-staging
+      - name: ai-health-check
+        args:
+          - name: target-namespace
+            value: vroom-staging

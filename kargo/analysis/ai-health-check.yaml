@@ -1,0 +1,52 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: ai-health-check
+  namespace: vroom
+spec:
+  args:
+    - name: target-namespace
+  metrics:
+    - name: ai-health-analysis
+      provider:
+        job:
+          metadata:
+            namespace: "{{args.target-namespace}}"
+          spec:
+            template:
+              spec:
+                restartPolicy: Never
+                containers:
+                  - name: reporter
+                    image: docker.io/ama2352/vroom-mvp-ai-reporter:latest
+                    args: ["--mode=verify"]
+                    resources:
+                      requests:
+                        cpu: 50m
+                        memory: 64Mi
+                      limits:
+                        cpu: 200m
+                        memory: 128Mi
+                    env:
+                      - name: GEMINI_API_KEY
+                        valueFrom:
+                          secretKeyRef:
+                            name: ai-reporter-secret
+                            key: gemini-api-key
+                      - name: SLACK_WEBHOOK_URL
+                        valueFrom:
+                          secretKeyRef:
+                            name: ai-reporter-secret
+                            key: slack-webhook-url
+                      - name: PROMETHEUS_URL
+                        value: "http://kube-prometheus-stack-prometheus.monitoring:9090"
+                      - name: LOKI_URL
+                        value: "http://loki-stack.monitoring:3100"
+                      - name: TARGET_NAMESPACE
+                        value: "{{args.target-namespace}}"
+                      - name: VERIFY_WINDOW
+                        value: "10m"
+                      - name: STABILIZATION_WAIT_SECONDS
+                        value: "300"
+      successCondition: result.exitCode == 0
+      failureLimit: 1

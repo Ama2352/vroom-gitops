@@ -1,0 +1,41 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod
+  namespace: vroom
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: vroom-warehouse
+      sources:
+        stages: [staging]   # only Freight that passed staging verification
+  promotionMechanisms:
+    gitRepoUpdates:
+      - repoURL: https://github.com/Ama2352/vroom-gitops.git
+        writeBranch: main
+        kustomize:
+          images:
+            - image: ama2352/vroom-mvp-user-service
+              path: apps/user/overlays/prod
+            - image: ama2352/vroom-mvp-ride-service
+              path: apps/ride/overlays/prod
+            - image: ama2352/vroom-mvp-dispatch-service
+              path: apps/dispatch/overlays/prod
+            - image: ama2352/vroom-mvp-notification-service
+              path: apps/notification/overlays/prod
+            - image: ama2352/vroom-mvp-frontend
+              path: apps/frontend/overlays/prod
+    argoCDAppUpdates:
+      - appName: vroom-prod-user
+        appNamespace: argocd
+      - appName: vroom-prod-ride
+        appNamespace: argocd
+      - appName: vroom-prod-dispatch
+        appNamespace: argocd
+      - appName: vroom-prod-notification
+        appNamespace: argocd
+      - appName: vroom-prod-frontend
+        appNamespace: argocd
+  # No verification block — prod requires human approval via Kargo UI/CLI
+  # The staging AI report posted to Slack serves as the human-readable gate

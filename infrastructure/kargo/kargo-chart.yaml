@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kargo
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"   # install before app stages
+spec:
+  project: default
+  source:
+    repoURL: https://charts.kargo.akuity.io
+    chart: kargo
+    targetRevision: 0.9.x
+    helm:
+      valuesObject:
+        controller:
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 300Mi
+        api:
+          resources:
+            requests:
+              cpu: 30m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          adminAccount:
+            enabled: true
+            # passwordHash: set via SealedSecret mounted into the deployment
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vroom-kargo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

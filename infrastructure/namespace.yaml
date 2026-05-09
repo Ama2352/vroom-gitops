@@ -17,3 +17,24 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: monitoring
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vroom-staging
+  labels:
+    env: staging
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vroom-prod
+  labels:
+    env: prod
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vroom-kargo
+  labels:
+    component: kargo

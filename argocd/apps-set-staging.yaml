@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: vroom-apps-dev
+  name: vroom-apps-staging
   namespace: argocd
 spec:
   generators:
@@ -12,22 +12,22 @@ spec:
           - path: apps/*
   template:
     metadata:
-      name: 'vroom-dev-{{path.basename}}'
+      name: 'vroom-staging-{{path.basename}}'
       labels:
-        env: dev
-        kargo.akuity.io/stage: dev
+        env: staging
+        kargo.akuity.io/stage: staging
     spec:
       project: default
       source:
         repoURL: https://github.com/Ama2352/vroom-gitops.git
         targetRevision: HEAD
-        path: '{{path}}/overlays/dev'
+        path: '{{path}}/overlays/staging'
       destination:
         server: https://kubernetes.default.svc
-        namespace: vroom-dev
+        namespace: vroom-staging
       syncPolicy:
         automated:
           prune: true
-          selfHeal: true
+          selfHeal: false   # Kargo owns staging; selfHeal off to prevent conflicts
         syncOptions:
           - CreateNamespace=true

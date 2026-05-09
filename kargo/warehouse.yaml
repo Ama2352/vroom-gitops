@@ -1,0 +1,24 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: vroom-warehouse
+  namespace: vroom
+spec:
+  subscriptions:
+    # Git subscriber: detects new commits to overlays/dev (from CI deploy-gitops job)
+    - git:
+        repoURL: https://github.com/Ama2352/vroom-gitops.git
+        branch: main
+        includePaths:
+          - "apps/*/overlays/dev/**"
+    # Image subscribers: detect new image tags in DockerHub
+    - image:
+        repoURL: docker.io/ama2352/vroom-mvp-user-service
+    - image:
+        repoURL: docker.io/ama2352/vroom-mvp-ride-service
+    - image:
+        repoURL: docker.io/ama2352/vroom-mvp-dispatch-service
+    - image:
+        repoURL: docker.io/ama2352/vroom-mvp-notification-service
+    - image:
+        repoURL: docker.io/ama2352/vroom-mvp-frontend

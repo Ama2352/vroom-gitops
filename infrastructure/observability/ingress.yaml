@@ -3,16 +3,13 @@ kind: Ingress
 metadata:
   name: monitoring-ingress
   namespace: monitoring
-  annotations:
-    # Use your existing Traefik middleware if configured
-    # traefik.ingress.kubernetes.io/router.middlewares: platform-auth-middleware@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
-    # Grafana - accessible at /grafana
     - host: ""
       http:
         paths:
+          # Grafana: serve_from_sub_path=true + root_url=/grafana/ set in metrics/prometheus-values.yaml
           - path: /grafana
             pathType: Prefix
             backend:
@@ -21,7 +18,7 @@ spec:
                 port:
                   number: 80
 
-          # Prometheus - accessible at /prometheus
+          # Prometheus: routePrefix=/prometheus set in metrics/prometheus-values.yaml
           - path: /prometheus
             pathType: Prefix
             backend:
@@ -30,7 +27,7 @@ spec:
                 port:
                   number: 9090
 
-          # AlertManager - accessible at /alertmanager
+          # AlertManager: routePrefix=/alertmanager set in metrics/prometheus-values.yaml
           - path: /alertmanager
             pathType: Prefix
             backend:
@@ -38,3 +35,13 @@ spec:
                 name: kube-prometheus-stack-alertmanager
                 port:
                   number: 9093
+
+          # Tempo Query (Jaeger UI): --query.base-path=/tempo set in traces/tempo-values.yaml
+          # No strip-prefix needed — the app serves all assets under /tempo internally
+          - path: /tempo
+            pathType: Prefix
+            backend:
+              service:
+                name: tempo-query
+                port:
+                  number: 16686

@@ -1,0 +1,242 @@
+# Prometheus Stack Values
+# Optimized for 9GB K3s cluster (3 nodes × 3GB RAM)
+# Resource allocation targets: ~25% cluster usage (~2.3GB)
+
+prometheus:
+  prometheusSpec:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+
+    retention: 7d
+    walCompression: true
+
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-path
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 5Gi
+
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
+
+    ruleSelector: {}
+    ruleNamespaceSelector: {}
+    ruleSelectorNilUsesHelmValues: false
+
+    podMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelector: {}
+    podMonitorNamespaceSelector: {}
+
+    scrapeInterval: 30s
+    evaluationInterval: 30s
+
+    externalUrl: "/prometheus"
+    routePrefix: "/prometheus"
+
+  additionalPrometheusRulesMap:
+    vroom-alerts:
+      groups:
+        - name: vroom-services
+          interval: 30s
+          rules:
+            - alert: NodeMemoryHigh
+              expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+              for: 5m
+              labels:
+                severity: warning
+                component: node
+              annotations:
+                summary: "High memory usage on {{ $labels.node }}"
+                description: "Node {{ $labels.node }} memory usage is {{ $value | humanizePercentage }}."
+
+            - alert: KubernetesPodCrashLooping
+              expr: rate(kube_pod_container_status_restarts_total[15m]) > 0.1
+              for: 5m
+              labels:
+                severity: warning
+                component: kubernetes
+              annotations:
+                summary: "Pod crash looping ({{ $labels.pod }})"
+                description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} restart rate: {{ $value }} restarts/min"
+
+            - alert: KubernetesPodNotHealthy
+              expr: min_over_time(sum by (namespace, pod) (kube_pod_status_phase{phase=~"Pending|Unknown|Failed"})[15m:1m]) > 0
+              for: 15m
+              labels:
+                severity: warning
+                component: kubernetes
+              annotations:
+                summary: "Pod not healthy ({{ $labels.pod }})"
+                description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} has been non-running for 15+ min."
+
+            - alert: ServiceDown
+              expr: up{job=~"ride.*|user.*|dispatch.*|notification.*"} == 0
+              for: 2m
+              labels:
+                severity: critical
+                component: application
+              annotations:
+                summary: "Service {{ $labels.job }} is DOWN"
+                description: "Service {{ $labels.job }} in {{ $labels.namespace }} unreachable for 2 min."
+
+grafana:
+  adminPassword: "ChangeMeToSecurePassword!"
+
+  grafana.ini:
+    server:
+      domain: ""
+      root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
+      serve_from_sub_path: true
+    auth.anonymous:
+      enabled: true
+      org_name: "Main Org."
+      org_role: "Admin"
+
+  persistence:
+    enabled: true
+    type: pvc
+    size: 1Gi
+    storageClassName: local-path
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+  ingress:
+    enabled: false
+
+  # Loki and Tempo datasources — provisioned automatically at startup
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      url: http://loki-stack:3100
+      access: proxy
+      jsonData:
+        maxLines: 1000
+    - name: Tempo
+      type: tempo
+      url: http://tempo:3100
+      access: proxy
+      jsonData:
+        tracesToLogsV2:
+          datasourceUid: loki
+          tags:
+            - key: service_name
+              value: app
+        serviceMap:
+          datasourceUid: prometheus
+        lokiSearch:
+          datasourceUid: loki
+
+alertmanager:
+  alertmanagerSpec:
+    externalUrl: "/alertmanager"
+    routePrefix: "/alertmanager"
+
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-path
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
+
+    # Mount the SealedSecret so AlertManager reads the webhook URL from a file
+    secrets:
+      - alertmanager-slack-secret
+
+  config:
+    global:
+      resolve_timeout: 5m
+      # slack_api_url intentionally absent — read from mounted secret file below
+
+    route:
+      group_by: ['alertname', 'cluster', 'service']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+      receiver: 'slack-notifications'
+      routes:
+        - match:
+            severity: critical
+          receiver: 'slack-notifications'
+          group_wait: 0s
+
+    receivers:
+      - name: 'slack-notifications'
+        slack_configs:
+          - api_url_file: /etc/alertmanager/secrets/alertmanager-slack-secret/slack-webhook-url
+            channel: '#vroom-alerts'
+            send_resolved: true
+            title: '{{ if eq .Status "firing" }}🔥{{ else }}✅{{ end }} [{{ .Status | upper }}] {{ .GroupLabels.alertname }}'
+            text: |
+              {{ range .Alerts }}
+              *Alert:* {{ .Labels.alertname }}
+              *Severity:* {{ .Labels.severity }}
+              *Details:* {{ .Annotations.summary }}
+              *Description:* {{ .Annotations.description }}
+              {{ end }}
+
+nodeExporter:
+  enabled: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+kubeStateMetrics:
+  enabled: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+prometheusOperator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+kubelet:
+  enabled: true
+  namespace: kube-system
+
+kubeControllerManager:
+  enabled: false
+kubeEtcd:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: false

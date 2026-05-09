@@ -1,0 +1,45 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: dev
+  namespace: vroom
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: vroom-warehouse
+      sources:
+        direct: true   # dev gets Freight directly from the Warehouse
+  promotionMechanisms:
+    gitRepoUpdates:
+      - repoURL: https://github.com/Ama2352/vroom-gitops.git
+        writeBranch: main
+        kustomize:
+          images:
+            - image: ama2352/vroom-mvp-user-service
+              path: apps/user/overlays/dev
+            - image: ama2352/vroom-mvp-ride-service
+              path: apps/ride/overlays/dev
+            - image: ama2352/vroom-mvp-dispatch-service
+              path: apps/dispatch/overlays/dev
+            - image: ama2352/vroom-mvp-notification-service
+              path: apps/notification/overlays/dev
+            - image: ama2352/vroom-mvp-frontend
+              path: apps/frontend/overlays/dev
+    argoCDAppUpdates:
+      - appName: vroom-dev-user
+        appNamespace: argocd
+      - appName: vroom-dev-ride
+        appNamespace: argocd
+      - appName: vroom-dev-dispatch
+        appNamespace: argocd
+      - appName: vroom-dev-notification
+        appNamespace: argocd
+      - appName: vroom-dev-frontend
+        appNamespace: argocd
+  verification:
+    analysisTemplates:
+      - name: prometheus-checks
+        args:
+          - name: target-namespace
+            value: vroom-dev

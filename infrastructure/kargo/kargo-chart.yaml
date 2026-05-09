@@ -4,11 +4,11 @@ metadata:
   name: kargo
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "-1"   # install before app stages
+    argocd.argoproj.io/sync-wave: "-1" # install before app stages
 spec:
   project: default
   source:
-    repoURL: ghcr.io/akuity/kargo-charts   # OCI registry — charts.kargo.akuity.io does not exist
+    repoURL: ghcr.io/akuity/kargo-charts # OCI registry — charts.kargo.akuity.io does not exist
     chart: kargo
     targetRevision: 0.9.1
     helm:
@@ -22,6 +22,8 @@ spec:
               cpu: 200m
               memory: 300Mi
         api:
+          secret:
+            name: kargo-admin-secret
           resources:
             requests:
               cpu: 30m
@@ -31,7 +33,6 @@ spec:
               memory: 128Mi
           adminAccount:
             enabled: true
-            # passwordHash: set via SealedSecret mounted into the deployment
   destination:
     server: https://kubernetes.default.svc
     namespace: vroom-kargo

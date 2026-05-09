@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - ../../base
   - ingress.yaml
-  - secrets/user-db-secrets.yaml   # SealedSecret for vroom-staging namespace — see vroom-infra/.secrets/INSTRUCTIONS.md
+  - secrets/user-db-secrets.yaml
 
 namespace: vroom-staging
 
@@ -18,4 +18,4 @@ labels:
 images:
   - name: vroom-mvp/user-service
     newName: ama2352/vroom-mvp-user-service
-    newTag: latest   # Kargo updates this tag during promotion
+    newTag: latest # Kargo updates this tag during promotion

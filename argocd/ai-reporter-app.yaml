@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vroom-ai-reporter
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ama2352/vroom-gitops.git
+    targetRevision: HEAD
+    path: apps/ai-reporter
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false

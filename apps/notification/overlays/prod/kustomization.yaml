@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - ../../base
   - ingress.yaml
-  - secrets/notification-db-secrets.yaml   # SealedSecret for vroom-prod namespace
+  - secrets/notification-db-secrets.yaml
 
 namespace: vroom-prod
 

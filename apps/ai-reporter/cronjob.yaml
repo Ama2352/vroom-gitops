@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: vroom-ai-reporter
-  namespace: vroom-dev
+  namespace: monitoring
 spec:
   schedule: "*/30 * * * *"
   concurrencyPolicy: Forbid

@@ -11,7 +11,7 @@ spec:
       provider:
         job:
           metadata:
-            namespace: "{{args.target-namespace}}"
+            namespace: monitoring   # fixed — secret lives here; TARGET_NAMESPACE env var scopes the queries
           spec:
             template:
               spec:

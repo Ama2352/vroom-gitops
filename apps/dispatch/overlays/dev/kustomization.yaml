@@ -2,19 +2,18 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- ../../base
-- ingress.yaml
+  - ../../base
+  - ingress.yaml
 
 namespace: vroom-dev
 
 patches:
-- path: patches/resource_limits.yaml
-
+  - path: patches/resource_limits.yaml
 
 labels:
-- pairs:
-    env: dev
+  - pairs:
+      env: dev
 images:
-- name: vroom-mvp/dispatch-service
-  newName: ama2352/vroom-mvp-dispatch-service
-  newTag: 75c5318f
+  - name: vroom-mvp/dispatch-service
+    newName: ama2352/vroom-mvp-dispatch-service
+    newTag: 75c5318f

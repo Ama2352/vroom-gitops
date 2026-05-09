@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - infra.yaml
-  - apps-set.yaml
+  - apps-set-dev.yaml
   - apps-set-staging.yaml
   - apps-set-prod.yaml
+  - ai-reporter-app.yaml

@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - ../../base
   - ingress.yaml
-  - secrets/ride-db-secrets.yaml   # SealedSecret for vroom-prod namespace
+  - secrets/ride-db-secrets.yaml
 
 namespace: vroom-prod
 

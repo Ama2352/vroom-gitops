@@ -1,22 +1,11 @@
 # Loki Stack Values
 # Single-binary mode with Promtail DaemonSet
-# Tuned for 9GB K3s cluster — 24h retention to minimize disk usage
+# Tuned for 9GB K3s cluster — 24h retention
 
 loki:
   enabled: true
   config:
     auth_enabled: false
-
-    ingester:
-      lifecycler:
-        address: 127.0.0.1
-        ring:
-          kvstore:
-            store: inmemory
-          replication_factor: 1
-      chunk_idle_period: 1h
-      max_chunk_age: 1h
-      chunk_retain_period: 30s
 
     schema_config:
       configs:
@@ -29,7 +18,6 @@ loki:
             period: 24h
 
     storage_config:
-      # boltdb_shipper must be defined when schema uses boltdb-shipper store
       boltdb_shipper:
         active_index_directory: /data/loki/boltdb-shipper-active
         cache_location: /data/loki/boltdb-shipper-cache
@@ -39,12 +27,9 @@ loki:
         directory: /data/loki/chunks
 
     limits_config:
-      retention_period: 24h
       ingestion_rate_mb: 4
       ingestion_burst_size_mb: 8
-
-    chunk_store_config:
-      max_look_back_period: 24h
+      retention_period: 24h
 
     compactor:
       working_directory: /data/loki/compactor
@@ -52,9 +37,8 @@ loki:
       retention_enabled: true
       retention_delete_delay: 2h
 
-    table_manager:
-      retention_deletes_enabled: true
-      retention_period: 24h
+    # table_manager intentionally omitted — compactor handles retention for boltdb-shipper;
+    # having both enabled simultaneously causes conflicts and prevents startup
 
   persistence:
     enabled: true

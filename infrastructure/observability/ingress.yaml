@@ -36,12 +36,5 @@ spec:
                 port:
                   number: 9093
 
-          # Tempo Query (Jaeger UI): --query.base-path=/tempo set in traces/tempo-values.yaml
-          # No strip-prefix needed — the app serves all assets under /tempo internally
-          - path: /tempo
-            pathType: Prefix
-            backend:
-              service:
-                name: tempo-query
-                port:
-                  number: 16686
+          # Tempo UI is in a separate Ingress object (traces/tempo-ingress.yaml) because it needs
+          # a strip-prefix Middleware annotation that cannot be applied per-path in a shared Ingress

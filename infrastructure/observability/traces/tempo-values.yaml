@@ -38,12 +38,10 @@ tempo:
     size: 1Gi
 
 # Jaeger-compatible query UI
-# --query.base-path=/tempo ensures all assets load from /tempo/** path
-# matching the Traefik ingress route in ingress.yaml
+# Sub-path routing (/tempo) is handled by a Traefik strip-prefix Middleware defined in
+# traces/tempo-ingress.yaml — no --query.base-path flag needed (not supported in this version)
 tempoQuery:
   enabled: true
-  extraArgs:
-    - --query.base-path=/tempo
   resources:
     requests:
       cpu: 10m

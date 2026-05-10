@@ -10,33 +10,76 @@ spec:
         name: vroom-warehouse
       sources:
         stages: [dev]   # only promote Freight that passed dev verification
-  promotionMechanisms:
-    gitRepoUpdates:
-      - repoURL: https://github.com/Ama2352/vroom-gitops.git
-        writeBranch: main
-        kustomize:
-          images:
-            - image: ama2352/vroom-mvp-user-service
-              path: apps/user/overlays/staging
-            - image: ama2352/vroom-mvp-ride-service
-              path: apps/ride/overlays/staging
-            - image: ama2352/vroom-mvp-dispatch-service
-              path: apps/dispatch/overlays/staging
-            - image: ama2352/vroom-mvp-notification-service
-              path: apps/notification/overlays/staging
-            - image: ama2352/vroom-mvp-frontend
-              path: apps/frontend/overlays/staging
-    argoCDAppUpdates:
-      - appName: vroom-staging-user
-        appNamespace: argocd
-      - appName: vroom-staging-ride
-        appNamespace: argocd
-      - appName: vroom-staging-dispatch
-        appNamespace: argocd
-      - appName: vroom-staging-notification
-        appNamespace: argocd
-      - appName: vroom-staging-frontend
-        appNamespace: argocd
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/Ama2352/vroom-gitops.git
+            checkout:
+              - branch: main
+                path: ./repo
+        - uses: kustomize-set-image
+          config:
+            path: repo/apps/user/overlays/staging
+            images:
+              - image: ama2352/vroom-mvp-user-service
+        - uses: kustomize-set-image
+          config:
+            path: repo/apps/ride/overlays/staging
+            images:
+              - image: ama2352/vroom-mvp-ride-service
+        - uses: kustomize-set-image
+          config:
+            path: repo/apps/dispatch/overlays/staging
+            images:
+              - image: ama2352/vroom-mvp-dispatch-service
+        - uses: kustomize-set-image
+          config:
+            path: repo/apps/notification/overlays/staging
+            images:
+              - image: ama2352/vroom-mvp-notification-service
+        - uses: kustomize-set-image
+          config:
+            path: repo/apps/frontend/overlays/staging
+            images:
+              - image: ama2352/vroom-mvp-frontend
+        - uses: git-commit
+          as: commit
+          config:
+            path: ./repo
+            message: "chore(gitops): promote images to staging"
+        - uses: git-push
+          config:
+            path: ./repo
+        - uses: argocd-update
+          config:
+            apps:
+              - name: vroom-staging-user
+                namespace: argocd
+                sources:
+                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                    desiredCommitFromStep: commit
+              - name: vroom-staging-ride
+                namespace: argocd
+                sources:
+                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                    desiredCommitFromStep: commit
+              - name: vroom-staging-dispatch
+                namespace: argocd
+                sources:
+                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                    desiredCommitFromStep: commit
+              - name: vroom-staging-notification
+                namespace: argocd
+                sources:
+                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                    desiredCommitFromStep: commit
+              - name: vroom-staging-frontend
+                namespace: argocd
+                sources:
+                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                    desiredCommitFromStep: commit
   verification:
     analysisTemplates:
       - name: prometheus-checks

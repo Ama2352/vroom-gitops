@@ -10,33 +10,76 @@ spec:
         name: vroom-warehouse
       sources:
         direct: true   # dev gets Freight directly from the Warehouse
-  promotionMechanisms:
-    gitRepoUpdates:
-      - repoURL: https://github.com/Ama2352/vroom-gitops.git
-        writeBranch: main
-        kustomize:
-          images:
-            - image: ama2352/vroom-mvp-user-service
-              path: apps/user/overlays/dev
-            - image: ama2352/vroom-mvp-ride-service
-              path: apps/ride/overlays/dev
-            - image: ama2352/vroom-mvp-dispatch-service
-              path: apps/dispatch/overlays/dev
-            - image: ama2352/vroom-mvp-notification-service
-              path: apps/notification/overlays/dev
-            - image: ama2352/vroom-mvp-frontend
-              path: apps/frontend/overlays/dev
-    argoCDAppUpdates:
-      - appName: vroom-dev-user
-        appNamespace: argocd
-      - appName: vroom-dev-ride
-        appNamespace: argocd
-      - appName: vroom-dev-dispatch
-        appNamespace: argocd
-      - appName: vroom-dev-notification
-        appNamespace: argocd
-      - appName: vroom-dev-frontend
-        appNamespace: argocd
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/Ama2352/vroom-gitops.git
+            checkout:
+              - branch: main
+                path: ./repo
+        - uses: kustomize-set-image
+          config:
+            path: repo/apps/user/overlays/dev
+            images:
+              - image: ama2352/vroom-mvp-user-service
+        - uses: kustomize-set-image
+          config:
+            path: repo/apps/ride/overlays/dev
+            images:
+              - image: ama2352/vroom-mvp-ride-service
+        - uses: kustomize-set-image
+          config:
+            path: repo/apps/dispatch/overlays/dev
+            images:
+              - image: ama2352/vroom-mvp-dispatch-service
+        - uses: kustomize-set-image
+          config:
+            path: repo/apps/notification/overlays/dev
+            images:
+              - image: ama2352/vroom-mvp-notification-service
+        - uses: kustomize-set-image
+          config:
+            path: repo/apps/frontend/overlays/dev
+            images:
+              - image: ama2352/vroom-mvp-frontend
+        - uses: git-commit
+          as: commit
+          config:
+            path: ./repo
+            message: "chore(gitops): promote images to dev"
+        - uses: git-push
+          config:
+            path: ./repo
+        - uses: argocd-update
+          config:
+            apps:
+              - name: vroom-dev-user
+                namespace: argocd
+                sources:
+                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                    desiredCommitFromStep: commit
+              - name: vroom-dev-ride
+                namespace: argocd
+                sources:
+                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                    desiredCommitFromStep: commit
+              - name: vroom-dev-dispatch
+                namespace: argocd
+                sources:
+                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                    desiredCommitFromStep: commit
+              - name: vroom-dev-notification
+                namespace: argocd
+                sources:
+                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                    desiredCommitFromStep: commit
+              - name: vroom-dev-frontend
+                namespace: argocd
+                sources:
+                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                    desiredCommitFromStep: commit
   verification:
     analysisTemplates:
       - name: prometheus-checks

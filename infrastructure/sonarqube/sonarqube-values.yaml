@@ -39,6 +39,9 @@ persistence:
 # Uses its own PVC and database — does not touch the shared platform/postgres instance.
 postgresql:
   enabled: true
+  image:
+    repository: bitnami/postgresql
+    tag: "latest"
   auth:
     username: sonarqube
     password: sonarqube

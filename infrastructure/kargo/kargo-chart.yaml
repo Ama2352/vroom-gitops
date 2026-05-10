@@ -22,6 +22,9 @@ spec:
               cpu: 200m
               memory: 300Mi
         api:
+          service:
+            type: NodePort
+            nodePort: 30088
           secret:
             name: kargo-admin-secret
           resources:

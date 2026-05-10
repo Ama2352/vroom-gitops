@@ -48,7 +48,7 @@ prometheus:
     evaluationInterval: 30s
 
     # Subpath configuration for Ingress
-    externalUrl: "/prometheus"
+    externalUrl: "http://localhost/prometheus"
     routePrefix: "/prometheus"
 
   additionalPrometheusRulesMap:
@@ -141,7 +141,7 @@ grafana:
 alertmanager:
   alertmanagerSpec:
     # Subpath configuration
-    externalUrl: "/alertmanager"
+    externalUrl: "http://localhost/alertmanager"
     routePrefix: "/alertmanager"
 
     # Keep AlertManager lightweight

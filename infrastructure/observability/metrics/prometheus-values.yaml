@@ -39,7 +39,7 @@ prometheus:
     scrapeInterval: 30s
     evaluationInterval: 30s
 
-    externalUrl: "/prometheus"
+    externalUrl: "http://localhost/prometheus"
     routePrefix: "/prometheus"
 
   additionalPrometheusRulesMap:
@@ -142,7 +142,7 @@ grafana:
 
 alertmanager:
   alertmanagerSpec:
-    externalUrl: "/alertmanager"
+    externalUrl: "http://localhost/alertmanager"
     routePrefix: "/alertmanager"
 
     resources:

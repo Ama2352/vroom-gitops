@@ -4,7 +4,7 @@ metadata:
   name: vroom-warehouse
   namespace: vroom
 spec:
-  interval: 1m
+  interval: 1m0s
   subscriptions:
     # Git subscriber: detects new commits to overlays/dev (from CI deploy-gitops job).
     # includePaths uses RE2 regex (not glob) in Kargo v1.x.
@@ -13,6 +13,7 @@ spec:
         branch: main
         commitSelectionStrategy: NewestFromBranch
         discoveryLimit: 20
+        strictSemvers: true
         includePaths:
           - "^apps/[^/]+/overlays/dev/.*$"
     # Image subscribers: detect new image tags pushed to DockerHub by CI.
@@ -20,19 +21,24 @@ spec:
         repoURL: docker.io/ama2352/vroom-mvp-user-service
         imageSelectionStrategy: SemVer
         discoveryLimit: 20
+        strictSemvers: true
     - image:
         repoURL: docker.io/ama2352/vroom-mvp-ride-service
         imageSelectionStrategy: SemVer
         discoveryLimit: 20
+        strictSemvers: true
     - image:
         repoURL: docker.io/ama2352/vroom-mvp-dispatch-service
         imageSelectionStrategy: SemVer
         discoveryLimit: 20
+        strictSemvers: true
     - image:
         repoURL: docker.io/ama2352/vroom-mvp-notification-service
         imageSelectionStrategy: SemVer
         discoveryLimit: 20
+        strictSemvers: true
     - image:
         repoURL: docker.io/ama2352/vroom-mvp-frontend
         imageSelectionStrategy: SemVer
         discoveryLimit: 20
+        strictSemvers: true

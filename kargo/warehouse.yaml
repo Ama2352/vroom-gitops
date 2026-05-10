@@ -19,20 +19,25 @@ spec:
     - image:
         repoURL: docker.io/ama2352/vroom-mvp-user-service
         imageSelectionStrategy: Digest
+        constraint: latest
         discoveryLimit: 20
     - image:
         repoURL: docker.io/ama2352/vroom-mvp-ride-service
         imageSelectionStrategy: Digest
+        constraint: latest
         discoveryLimit: 20
     - image:
         repoURL: docker.io/ama2352/vroom-mvp-dispatch-service
         imageSelectionStrategy: Digest
+        constraint: latest
         discoveryLimit: 20
     - image:
         repoURL: docker.io/ama2352/vroom-mvp-notification-service
         imageSelectionStrategy: Digest
+        constraint: latest
         discoveryLimit: 20
     - image:
         repoURL: docker.io/ama2352/vroom-mvp-frontend
         imageSelectionStrategy: Digest
+        constraint: latest
         discoveryLimit: 20

@@ -52,7 +52,6 @@ spec:
         - uses: git-push
           config:
             path: ./repo
-        # desiredCommitFromStep removed in Kargo v1.3.0 — use expression syntax
         - uses: argocd-update
           config:
             apps:
@@ -84,12 +83,9 @@ spec:
   verification:
     analysisTemplates:
       - name: prometheus-checks
-        args:
-          - name: target-namespace
-            value: vroom-dev
       - name: ai-health-check
-        args:
-          - name: target-namespace
-            value: vroom-dev
-          - name: stabilization-wait
-            value: "60"
+    args:
+      - name: target-namespace
+        value: vroom-dev
+      - name: stabilization-wait
+        value: "60"

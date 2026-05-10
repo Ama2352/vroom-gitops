@@ -83,10 +83,7 @@ spec:
   verification:
     analysisTemplates:
       - name: prometheus-checks
-        args:
-          - name: target-namespace
-            value: vroom-staging
       - name: ai-health-check
-        args:
-          - name: target-namespace
-            value: vroom-staging
+    args:
+      - name: target-namespace
+        value: vroom-staging

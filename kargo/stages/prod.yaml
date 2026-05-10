@@ -86,10 +86,7 @@ spec:
   verification:
     analysisTemplates:
       - name: prometheus-checks
-        args:
-          - name: target-namespace
-            value: vroom-prod
       - name: ai-health-check
-        args:
-          - name: target-namespace
-            value: vroom-prod
+    args:
+      - name: target-namespace
+        value: vroom-prod

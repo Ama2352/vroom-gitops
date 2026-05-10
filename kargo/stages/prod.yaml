@@ -15,7 +15,7 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/Ama2352/vroom-gitops.git
+            repoURL: https://gitlab.com/vroom-app/gitops.git
             checkout:
               - branch: main
                 path: ./repo
@@ -58,27 +58,27 @@ spec:
               - name: vroom-prod-user
                 namespace: argocd
                 sources:
-                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                  - repoURL: https://gitlab.com/vroom-app/gitops.git
                     desiredCommitFromStep: commit
               - name: vroom-prod-ride
                 namespace: argocd
                 sources:
-                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                  - repoURL: https://gitlab.com/vroom-app/gitops.git
                     desiredCommitFromStep: commit
               - name: vroom-prod-dispatch
                 namespace: argocd
                 sources:
-                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                  - repoURL: https://gitlab.com/vroom-app/gitops.git
                     desiredCommitFromStep: commit
               - name: vroom-prod-notification
                 namespace: argocd
                 sources:
-                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                  - repoURL: https://gitlab.com/vroom-app/gitops.git
                     desiredCommitFromStep: commit
               - name: vroom-prod-frontend
                 namespace: argocd
                 sources:
-                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                  - repoURL: https://gitlab.com/vroom-app/gitops.git
                     desiredCommitFromStep: commit
   # No verification block — prod requires human approval via Kargo UI/CLI
   # The staging AI report posted to Slack serves as the human-readable gate

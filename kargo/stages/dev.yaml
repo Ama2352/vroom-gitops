@@ -15,7 +15,7 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/Ama2352/vroom-gitops.git
+            repoURL: https://gitlab.com/vroom-app/gitops.git
             checkout:
               - branch: main
                 path: ./repo
@@ -58,27 +58,27 @@ spec:
               - name: vroom-dev-user
                 namespace: argocd
                 sources:
-                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                  - repoURL: https://gitlab.com/vroom-app/gitops.git
                     desiredCommitFromStep: commit
               - name: vroom-dev-ride
                 namespace: argocd
                 sources:
-                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                  - repoURL: https://gitlab.com/vroom-app/gitops.git
                     desiredCommitFromStep: commit
               - name: vroom-dev-dispatch
                 namespace: argocd
                 sources:
-                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                  - repoURL: https://gitlab.com/vroom-app/gitops.git
                     desiredCommitFromStep: commit
               - name: vroom-dev-notification
                 namespace: argocd
                 sources:
-                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                  - repoURL: https://gitlab.com/vroom-app/gitops.git
                     desiredCommitFromStep: commit
               - name: vroom-dev-frontend
                 namespace: argocd
                 sources:
-                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                  - repoURL: https://gitlab.com/vroom-app/gitops.git
                     desiredCommitFromStep: commit
   verification:
     analysisTemplates:

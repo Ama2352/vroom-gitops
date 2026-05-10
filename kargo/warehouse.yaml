@@ -7,7 +7,7 @@ spec:
   subscriptions:
     # Git subscriber: detects new commits to overlays/dev (from CI deploy-gitops job)
     - git:
-        repoURL: https://github.com/Ama2352/vroom-gitops.git
+        repoURL: https://gitlab.com/vroom-app/gitops.git
         branch: main
         includePaths:
           - "apps/*/overlays/dev/**"

@@ -6,7 +6,7 @@ metadata:
 spec:
   generators:
     - git:
-        repoURL: https://github.com/Ama2352/vroom-gitops.git
+        repoURL: https://gitlab.com/vroom-app/gitops.git
         revision: HEAD
         directories:
           - path: apps/*
@@ -21,7 +21,7 @@ spec:
     spec:
       project: default
       source:
-        repoURL: https://github.com/Ama2352/vroom-gitops.git
+        repoURL: https://gitlab.com/vroom-app/gitops.git
         targetRevision: HEAD
         path: '{{path}}/overlays/prod'
       destination:

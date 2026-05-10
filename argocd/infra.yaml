@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/Ama2352/vroom-gitops.git
+    repoURL: https://gitlab.com/vroom-app/gitops.git
     targetRevision: HEAD
     path: infrastructure
   destination:

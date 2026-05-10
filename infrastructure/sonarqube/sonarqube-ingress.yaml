@@ -1,0 +1,22 @@
+# SonarQube is configured with sonar.web.context=/sonarqube, so it natively handles
+# the /sonarqube prefix in all HTML, JS, and API paths. No strip-prefix middleware
+# is needed — requests are forwarded to port 9000 as-is.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sonarqube-ingress
+  namespace: sonarqube
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  ingressClassName: traefik
+  rules:
+    - http:
+        paths:
+          - path: /sonarqube
+            pathType: Prefix
+            backend:
+              service:
+                name: sonarqube
+                port:
+                  number: 9000

@@ -1,0 +1,67 @@
+# SonarQube Community Edition — tuned for K3s 10 GB RAM budget
+# Serves under /sonarqube sub-path; Traefik forwards without stripping the prefix
+# because SonarQube itself handles the context path natively.
+
+# Tell SonarQube it lives at /sonarqube (must match SONAR_HOST_URL in GitLab CI vars)
+sonarWebContext: /sonarqube
+sonarProperties:
+  sonar.web.context: /sonarqube
+
+# JVM heap for web + Compute Engine processes.
+# SonarQube also runs an internal Elasticsearch — see initSysctl below.
+jvmOpts: "-Xmx512m -Xms128m -XX:+UseContainerSupport"
+jvmCeOpts: "-Xmx256m -Xms64m -XX:+UseContainerSupport"
+
+resources:
+  requests:
+    cpu: "200m"
+    memory: "512Mi"
+  limits:
+    cpu: "800m"
+    memory: "1.5Gi"
+
+# Elasticsearch (embedded in SonarQube) requires vm.max_map_count=524288 on the host.
+# The initContainer sets it at pod startup — requires privileged=true.
+# The sonarqube namespace has pod-security.kubernetes.io/enforce: privileged to allow this.
+initSysctl:
+  enabled: true
+  vmMaxMapCount: 524288
+  securityContext:
+    privileged: true
+    runAsUser: 0
+
+# Persist analysis history across pod restarts
+persistence:
+  enabled: true
+  size: 2Gi
+
+# Bundled Bitnami PostgreSQL subchart.
+# Uses its own PVC and database — does not touch the shared platform/postgres instance.
+postgresql:
+  enabled: true
+  auth:
+    username: sonarqube
+    password: sonarqube
+    database: sonarqube
+  primary:
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "128Mi"
+      limits:
+        cpu: "200m"
+        memory: "256Mi"
+    persistence:
+      size: 2Gi
+
+# Traefik handles external access — no need for Nginx or NodePort
+nginx:
+  enabled: false
+
+service:
+  type: ClusterIP
+
+# Keep Prometheus pod monitors off (monitoring namespace already has full stack)
+prometheusMonitoring:
+  podMonitor:
+    enabled: false

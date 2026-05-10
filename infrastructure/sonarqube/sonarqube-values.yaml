@@ -1,14 +1,7 @@
-# SonarQube Community Edition — tuned for K3s 10 GB RAM budget
-# Serves under /sonarqube sub-path; Traefik forwards without stripping the prefix
-# because SonarQube itself handles the context path natively.
+# SonarQube Community Edition — tuned for K3s 10 GB RAM budget.
+# Exposed via NodePort 30090 (direct) and Traefik /sonarqube path (with strip-prefix).
+# Runs at root path — no sonarWebContext needed.
 
-# Tell SonarQube it lives at /sonarqube (must match SONAR_HOST_URL in GitLab CI vars)
-sonarWebContext: /sonarqube
-sonarProperties:
-  sonar.web.context: /sonarqube
-
-# JVM heap for web + Compute Engine processes.
-# SonarQube also runs an internal Elasticsearch — see initSysctl below.
 jvmOpts: "-Xmx512m -Xms128m -XX:+UseContainerSupport"
 jvmCeOpts: "-Xmx256m -Xms64m -XX:+UseContainerSupport"
 
@@ -20,8 +13,8 @@ resources:
     cpu: "800m"
     memory: "1.5Gi"
 
-# Elasticsearch (embedded in SonarQube) requires vm.max_map_count=524288 on the host.
-# The initContainer sets it at pod startup — requires privileged=true.
+# Elasticsearch (embedded) requires vm.max_map_count=524288.
+# initContainer sets it at pod startup — requires privileged=true.
 # The sonarqube namespace has pod-security.kubernetes.io/enforce: privileged to allow this.
 initSysctl:
   enabled: true
@@ -30,13 +23,11 @@ initSysctl:
     privileged: true
     runAsUser: 0
 
-# Persist analysis history across pod restarts
 persistence:
   enabled: true
   size: 2Gi
 
-# Bundled Bitnami PostgreSQL subchart.
-# Uses its own PVC and database — does not touch the shared platform/postgres instance.
+# Bundled Bitnami PostgreSQL — isolated from the shared platform/postgres instance.
 postgresql:
   enabled: true
   image:
@@ -57,14 +48,15 @@ postgresql:
     persistence:
       size: 2Gi
 
-# Traefik handles external access — no need for Nginx or NodePort
 nginx:
   enabled: false
 
+# NodePort 30090 for direct access: http://192.168.25.133:30090
+# Traefik ingress at /sonarqube also works (strip-prefix middleware in sonarqube-ingress.yaml)
 service:
-  type: ClusterIP
+  type: NodePort
+  nodePort: 30090
 
-# Keep Prometheus pod monitors off (monitoring namespace already has full stack)
 prometheusMonitoring:
   podMonitor:
     enabled: false

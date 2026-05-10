@@ -5,13 +5,14 @@ metadata:
   namespace: vroom
 spec:
   subscriptions:
-    # Git subscriber: detects new commits to overlays/dev (from CI deploy-gitops job)
+    # Git subscriber: detects new commits to overlays/dev (from CI deploy-gitops job).
+    # includePaths uses RE2 regex (not glob) in Kargo v1.x.
     - git:
         repoURL: https://github.com/Ama2352/vroom-gitops.git
         branch: main
         includePaths:
-          - "apps/*/overlays/dev/**"
-    # Image subscribers: detect new image tags in DockerHub
+          - "^apps/[^/]+/overlays/dev/.*$"
+    # Image subscribers: detect new image tags pushed to DockerHub by CI.
     - image:
         repoURL: docker.io/ama2352/vroom-mvp-user-service
     - image:

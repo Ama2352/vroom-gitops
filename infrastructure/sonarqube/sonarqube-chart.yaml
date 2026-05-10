@@ -16,7 +16,7 @@ spec:
         releaseName: sonarqube
         valueFiles:
           - $values/infrastructure/sonarqube/sonarqube-values.yaml
-    - repoURL: https://gitlab.com/vroom-app/gitops.git
+    - repoURL: https://github.com/Ama2352/vroom-gitops.git
       targetRevision: HEAD
       ref: values
   destination:

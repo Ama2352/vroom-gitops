@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://gitlab.com/vroom-app/gitops.git
+    repoURL: https://github.com/Ama2352/vroom-gitops.git
     targetRevision: HEAD
     path: kargo
   destination:

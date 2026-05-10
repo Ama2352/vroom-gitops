@@ -52,6 +52,7 @@ spec:
         - uses: git-push
           config:
             path: ./repo
+        # desiredCommitFromStep removed in Kargo v1.3.0 — use expression syntax
         - uses: argocd-update
           config:
             apps:
@@ -59,30 +60,36 @@ spec:
                 namespace: argocd
                 sources:
                   - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredCommitFromStep: commit
+                    desiredRevision: ${{ outputs.commit.commit }}
               - name: vroom-dev-ride
                 namespace: argocd
                 sources:
                   - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredCommitFromStep: commit
+                    desiredRevision: ${{ outputs.commit.commit }}
               - name: vroom-dev-dispatch
                 namespace: argocd
                 sources:
                   - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredCommitFromStep: commit
+                    desiredRevision: ${{ outputs.commit.commit }}
               - name: vroom-dev-notification
                 namespace: argocd
                 sources:
                   - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredCommitFromStep: commit
+                    desiredRevision: ${{ outputs.commit.commit }}
               - name: vroom-dev-frontend
                 namespace: argocd
                 sources:
                   - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredCommitFromStep: commit
+                    desiredRevision: ${{ outputs.commit.commit }}
   verification:
     analysisTemplates:
       - name: prometheus-checks
         args:
           - name: target-namespace
             value: vroom-dev
+      - name: ai-health-check
+        args:
+          - name: target-namespace
+            value: vroom-dev
+          - name: stabilization-wait
+            value: "60"

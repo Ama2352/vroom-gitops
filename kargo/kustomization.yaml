@@ -9,3 +9,4 @@ resources:
   - stages/prod.yaml
   - analysis/prometheus-checks.yaml
   - analysis/ai-health-check.yaml
+  - secrets/ai-reporter-secret.yaml

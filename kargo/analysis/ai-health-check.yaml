@@ -6,12 +6,12 @@ metadata:
 spec:
   args:
     - name: target-namespace
+    - name: stabilization-wait
+      value: "300"   # default; dev stage overrides to 60
   metrics:
     - name: ai-health-analysis
       provider:
         job:
-          metadata:
-            namespace: monitoring   # fixed — secret lives here; TARGET_NAMESPACE env var scopes the queries
           spec:
             template:
               spec:
@@ -47,6 +47,6 @@ spec:
                       - name: VERIFY_WINDOW
                         value: "10m"
                       - name: STABILIZATION_WAIT_SECONDS
-                        value: "300"
+                        value: "{{args.stabilization-wait}}"
       successCondition: result.exitCode == 0
       failureLimit: 1

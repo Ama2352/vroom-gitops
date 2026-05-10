@@ -59,27 +59,27 @@ spec:
                 namespace: argocd
                 sources:
                   - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredCommitFromStep: commit
+                    desiredRevision: ${{ outputs.commit.commit }}
               - name: vroom-staging-ride
                 namespace: argocd
                 sources:
                   - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredCommitFromStep: commit
+                    desiredRevision: ${{ outputs.commit.commit }}
               - name: vroom-staging-dispatch
                 namespace: argocd
                 sources:
                   - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredCommitFromStep: commit
+                    desiredRevision: ${{ outputs.commit.commit }}
               - name: vroom-staging-notification
                 namespace: argocd
                 sources:
                   - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredCommitFromStep: commit
+                    desiredRevision: ${{ outputs.commit.commit }}
               - name: vroom-staging-frontend
                 namespace: argocd
                 sources:
                   - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredCommitFromStep: commit
+                    desiredRevision: ${{ outputs.commit.commit }}
   verification:
     analysisTemplates:
       - name: prometheus-checks

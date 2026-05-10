@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: ghcr.io/akuity/kargo-charts # OCI registry — charts.kargo.akuity.io does not exist
     chart: kargo
-    targetRevision: 0.9.1
+    targetRevision: 1.10.3
     helm:
       valuesObject:
         controller:

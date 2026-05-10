@@ -18,7 +18,7 @@ spec:
       failureCondition: result[0] >= 5.0
       failureLimit: 2
       interval: 2m
-      count: 3   # must pass 3 consecutive checks (6 min total) before promotion is approved
+      count: 3
 
     - name: p99-latency
       provider:

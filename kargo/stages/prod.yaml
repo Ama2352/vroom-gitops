@@ -59,26 +59,37 @@ spec:
                 namespace: argocd
                 sources:
                   - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredCommitFromStep: commit
+                    desiredRevision: ${{ outputs.commit.commit }}
               - name: vroom-prod-ride
                 namespace: argocd
                 sources:
                   - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredCommitFromStep: commit
+                    desiredRevision: ${{ outputs.commit.commit }}
               - name: vroom-prod-dispatch
                 namespace: argocd
                 sources:
                   - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredCommitFromStep: commit
+                    desiredRevision: ${{ outputs.commit.commit }}
               - name: vroom-prod-notification
                 namespace: argocd
                 sources:
                   - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredCommitFromStep: commit
+                    desiredRevision: ${{ outputs.commit.commit }}
               - name: vroom-prod-frontend
                 namespace: argocd
                 sources:
                   - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredCommitFromStep: commit
-  # No verification block — prod requires human approval via Kargo UI/CLI
-  # The staging AI report posted to Slack serves as the human-readable gate
+                    desiredRevision: ${{ outputs.commit.commit }}
+  # Prod requires human approval via `kargo approve` before promotion runs.
+  # Verification fires automatically after the promotion completes.
+  # A CRIT result fires Slack alerts but does NOT auto-rollback.
+  verification:
+    analysisTemplates:
+      - name: prometheus-checks
+        args:
+          - name: target-namespace
+            value: vroom-prod
+      - name: ai-health-check
+        args:
+          - name: target-namespace
+            value: vroom-prod

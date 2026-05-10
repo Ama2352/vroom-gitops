@@ -19,9 +19,17 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: argo-rollouts
+  # Kubernetes auto-populates preserveUnknownFields: false on CRDs at storage time.
+  # The Helm-rendered CRD manifests don't include this field, causing a perpetual diff.
+  ignoreDifferences:
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      jsonPointers:
+        - /spec/preserveUnknownFields
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ServerSideApply=true

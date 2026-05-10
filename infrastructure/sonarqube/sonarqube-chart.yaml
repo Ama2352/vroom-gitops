@@ -22,6 +22,14 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: sonarqube
+  # Kubernetes strips apiVersion and kind from StatefulSet volumeClaimTemplates at
+  # storage time; the Helm chart includes them, causing a perpetual diff in ArgoCD.
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      jqPathExpressions:
+        - .spec.volumeClaimTemplates[].apiVersion
+        - .spec.volumeClaimTemplates[].kind
   syncPolicy:
     automated:
       prune: true

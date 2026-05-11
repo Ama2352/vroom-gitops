@@ -1,22 +1,17 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 resources:
-  - ../../base
-  - ingress.yaml
-  - secrets/user-db-secrets.yaml
-
+- ../../base
+- ingress.yaml
+- secrets/user-db-secrets.yaml
 namespace: vroom-prod
-
 patches:
-  - path: patches/resource_limits.yaml
-  - path: patches/replicas.yaml
-
+- path: patches/resource_limits.yaml
+- path: patches/replicas.yaml
 labels:
-  - pairs:
-      env: prod
-
+- pairs:
+    env: prod
 images:
-  - name: vroom-mvp/user-service
-    newName: ama2352/vroom-mvp-user-service
-    newTag: latest # Kargo manages this tag
+- name: vroom-mvp/user-service
+  newName: ama2352/vroom-mvp-user-service
+  digest: sha256:be4fa6daa2e9a2b71c866544728b74491dea36eb2166662ed49f31f278eb4018

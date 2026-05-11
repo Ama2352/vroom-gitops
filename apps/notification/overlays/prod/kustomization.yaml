@@ -1,22 +1,17 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 resources:
-  - ../../base
-  - ingress.yaml
-  - secrets/notification-db-secrets.yaml
-
+- ../../base
+- ingress.yaml
+- secrets/notification-db-secrets.yaml
 namespace: vroom-prod
-
 patches:
-  - path: patches/resource_limits.yaml
-  - path: patches/replicas.yaml
-
+- path: patches/resource_limits.yaml
+- path: patches/replicas.yaml
 labels:
-  - pairs:
-      env: prod
-
+- pairs:
+    env: prod
 images:
-  - name: vroom-mvp/notification-service
-    newName: ama2352/vroom-mvp-notification-service
-    newTag: latest
+- name: vroom-mvp/notification-service
+  newName: ama2352/vroom-mvp-notification-service
+  digest: sha256:58c35ef407f4520139c5981b161bbaf194ccc2dc0b8ac7f954e2ba4303e7bfc5

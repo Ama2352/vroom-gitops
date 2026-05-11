@@ -18,6 +18,8 @@ spec:
       labels:
         env: dev
         kargo.akuity.io/stage: dev
+      annotations:
+        kargo.akuity.io/authorized-stage: vroom:dev
     spec:
       project: default
       source:

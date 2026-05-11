@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: default
+  namespace: vroom-dev
+imagePullSecrets:
+- name: dockerhub-pull-secret

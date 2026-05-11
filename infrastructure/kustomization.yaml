@@ -10,4 +10,5 @@ resources:
   - argocd-ingress.yaml
   - observability
   - kargo
+  - image-pull-secrets
   # - sonarqube

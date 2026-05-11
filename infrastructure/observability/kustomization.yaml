@@ -7,5 +7,3 @@ resources:
   - metrics/alertmanager-slack-secret.yaml
   - metrics/service-monitors.yaml
   - logs/loki-chart.yaml
-  - traces/tempo-chart.yaml
-  - traces/tempo-ingress.yaml

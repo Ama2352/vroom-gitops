@@ -10,4 +10,4 @@ resources:
   - argocd-ingress.yaml
   - observability
   - kargo
-  - sonarqube
+  # - sonarqube

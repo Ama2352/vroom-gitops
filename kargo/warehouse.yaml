@@ -5,8 +5,8 @@ metadata:
   namespace: vroom
 spec:
   subscriptions:
-    # Git subscriber: detects new commits to overlays/dev (from CI deploy-gitops job).
-    # includePaths requires regex: or glob: prefix for non-exact matches.
+    # Git subscriber: detects manual configuration changes to overlays/dev.
+    # CI-driven deployment to dev is now handled automatically by Kargo.
     - git:
         repoURL: https://github.com/Ama2352/vroom-gitops.git
         branch: main

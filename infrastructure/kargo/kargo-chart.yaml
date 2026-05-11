@@ -13,18 +13,12 @@ spec:
     targetRevision: 1.10.3
     helm:
       valuesObject:
-        controller:
-          analysis:
+        api:
+          rollouts:
+            integrationEnabled: true
             logs:
               enabled: true
-          resources:
-            requests:
-              cpu: 50m
-              memory: 128Mi
-            limits:
-              cpu: 200m
-              memory: 300Mi
-        api:
+              urlTemplate: "http://loki-stack.monitoring.svc.cluster.local:3100/loki/api/v1/query_range?query={namespace=\"${{jobNamespace}}\"} |= \"${{jobName}}\"&limit=1000"
           service:
             type: NodePort
             nodePort: 30088
@@ -39,6 +33,14 @@ spec:
               memory: 128Mi
           adminAccount:
             enabled: true
+        controller:
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 300Mi
   destination:
     server: https://kubernetes.default.svc
     namespace: vroom-kargo

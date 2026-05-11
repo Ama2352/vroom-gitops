@@ -25,35 +25,35 @@ spec:
             images:
               - image: vroom-mvp/user-service
                 newName: ama2352/vroom-mvp-user-service
-                digest: ${{ imageFrom("docker.io/ama2352/vroom-mvp-user-service").digest }}
+                digest: ${{ imageFrom("docker.io/ama2352/vroom-mvp-user-service").Digest }}
         - uses: kustomize-set-image
           config:
             path: repo/apps/ride/overlays/dev
             images:
               - image: vroom-mvp/ride-service
                 newName: ama2352/vroom-mvp-ride-service
-                digest: ${{ imageFrom("docker.io/ama2352/vroom-mvp-ride-service").digest }}
+                digest: ${{ imageFrom("docker.io/ama2352/vroom-mvp-ride-service").Digest }}
         - uses: kustomize-set-image
           config:
             path: repo/apps/dispatch/overlays/dev
             images:
               - image: vroom-mvp/dispatch-service
                 newName: ama2352/vroom-mvp-dispatch-service
-                digest: ${{ imageFrom("docker.io/ama2352/vroom-mvp-dispatch-service").digest }}
+                digest: ${{ imageFrom("docker.io/ama2352/vroom-mvp-dispatch-service").Digest }}
         - uses: kustomize-set-image
           config:
             path: repo/apps/notification/overlays/dev
             images:
               - image: vroom-mvp/notification-service
                 newName: ama2352/vroom-mvp-notification-service
-                digest: ${{ imageFrom("docker.io/ama2352/vroom-mvp-notification-service").digest }}
+                digest: ${{ imageFrom("docker.io/ama2352/vroom-mvp-notification-service").Digest }}
         - uses: kustomize-set-image
           config:
             path: repo/apps/frontend/overlays/dev
             images:
               - image: vroom-mvp/frontend
                 newName: ama2352/vroom-mvp-frontend
-                digest: ${{ imageFrom("docker.io/ama2352/vroom-mvp-frontend").digest }}
+                digest: ${{ imageFrom("docker.io/ama2352/vroom-mvp-frontend").Digest }}
         - uses: git-commit
           as: commit
           config:

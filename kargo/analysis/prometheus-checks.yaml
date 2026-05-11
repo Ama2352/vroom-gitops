@@ -23,7 +23,7 @@ spec:
     - name: p99-latency
       provider:
         prometheus:
-          address: http://kube-prometheus-stack-prometheus.monitoring:9090
+          address: http://kube-prometheus-stack-prometheus.monitoring:9090/prometheus
           query: |
             histogram_quantile(0.99, sum by (le) (
               rate(http_request_duration_seconds_bucket{namespace="{{args.target-namespace}}"}[10m])

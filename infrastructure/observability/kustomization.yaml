@@ -8,3 +8,4 @@ resources:
   - metrics/service-monitors.yaml
   - logs/loki-chart.yaml
   - traffic-generator.yaml
+  - metrics/traefik-monitor.yaml

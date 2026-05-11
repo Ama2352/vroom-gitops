@@ -18,7 +18,7 @@ spec:
             integrationEnabled: true
             logs:
               enabled: true
-              urlTemplate: "http://loki-stack.monitoring.svc.cluster.local:3100/loki/api/v1/query_range?query={namespace=\"${{jobNamespace}}\"} |= \"${{jobName}}\"&limit=1000"
+              urlTemplate: "http://loki-stack.monitoring.svc.cluster.local:3100/loki/api/v1/query_range?query=%7Bnamespace%3D%22${{jobNamespace}}%22%7D%20%7C%3D%20%22${{jobName}}%22&limit=1000"
           service:
             type: NodePort
             nodePort: 30088

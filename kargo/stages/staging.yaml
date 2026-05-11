@@ -9,7 +9,7 @@ spec:
         kind: Warehouse
         name: vroom-warehouse
       sources:
-        stages: [dev]   # only promote Freight that passed dev verification
+        stages: [dev] # only promote Freight that passed dev verification
   promotionTemplate:
     spec:
       steps:
@@ -56,9 +56,9 @@ spec:
                 digest: ${{ imageFrom("docker.io/ama2352/vroom-mvp-frontend").Digest }}
         - uses: kustomize-set-image
           config:
-            path: repo/apps/ai-reporter/overlays/staging
+            path: repo/apps/ai-reporter
             images:
-              - image: vroom-mvp/ai-reporter
+              - image: docker.io/ama2352/vroom-mvp-ai-reporter
                 newName: ama2352/vroom-mvp-ai-reporter
                 digest: ${{ imageFrom("docker.io/ama2352/vroom-mvp-ai-reporter").Digest }}
         - uses: git-commit

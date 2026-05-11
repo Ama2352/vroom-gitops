@@ -12,8 +12,8 @@ spec:
         prometheus:
           address: http://kube-prometheus-stack-prometheus.monitoring:9090/prometheus
           query: |
-            100 * sum(rate(http_requests_total{status=~"5..",namespace="{{args.target-namespace}}"}[10m]))
-            / sum(rate(http_requests_total{namespace="{{args.target-namespace}}"}[10m]))
+            (100 * sum(rate(http_requests_total{status=~"5..",namespace="{{args.target-namespace}}"}[10m]))
+            / sum(rate(http_requests_total{namespace="{{args.target-namespace}}"}[10m]))) or vector(0)
       successCondition: result[0] < 1.0
       failureCondition: result[0] >= 5.0
       failureLimit: 2

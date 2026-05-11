@@ -33,7 +33,7 @@ spec:
                       name: ai-reporter-secret
                       key: gemini-api-key
                 - name: GEMINI_MODEL
-                  value: "gemini-1.5-flash-latest"
+                  value: "gemini-2.5-flash"
                 - name: SLACK_WEBHOOK_URL
                   valueFrom:
                     secretKeyRef:
@@ -81,7 +81,7 @@ spec:
                       name: ai-reporter-secret
                       key: gemini-api-key
                 - name: GEMINI_MODEL
-                  value: "gemini-1.5-flash-latest"
+                  value: "gemini-2.5-flash"
                 - name: SLACK_WEBHOOK_URL
                   valueFrom:
                     secretKeyRef:

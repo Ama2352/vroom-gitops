@@ -79,3 +79,6 @@ promtail:
 
 grafana:
   enabled: false   # managed by kube-prometheus-stack
+
+loki:
+  isDefault: false

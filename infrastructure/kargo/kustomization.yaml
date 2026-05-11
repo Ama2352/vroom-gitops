@@ -3,4 +3,4 @@ kind: Kustomization
 
 resources:
   - kargo-chart.yaml
-  - secrets/kargo-admin-secrets.yaml
+  - secrets/kargo-admin-password.yaml

@@ -25,35 +25,35 @@ spec:
             images:
               - image: vroom-mvp/user-service
                 newName: ama2352/vroom-mvp-user-service
-                useDigest: true
+                digest: ${{ image("docker.io/ama2352/vroom-mvp-user-service").digest }}
         - uses: kustomize-set-image
           config:
             path: repo/apps/ride/overlays/staging
             images:
               - image: vroom-mvp/ride-service
                 newName: ama2352/vroom-mvp-ride-service
-                useDigest: true
+                digest: ${{ image("docker.io/ama2352/vroom-mvp-ride-service").digest }}
         - uses: kustomize-set-image
           config:
             path: repo/apps/dispatch/overlays/staging
             images:
               - image: vroom-mvp/dispatch-service
                 newName: ama2352/vroom-mvp-dispatch-service
-                useDigest: true
+                digest: ${{ image("docker.io/ama2352/vroom-mvp-dispatch-service").digest }}
         - uses: kustomize-set-image
           config:
             path: repo/apps/notification/overlays/staging
             images:
               - image: vroom-mvp/notification-service
                 newName: ama2352/vroom-mvp-notification-service
-                useDigest: true
+                digest: ${{ image("docker.io/ama2352/vroom-mvp-notification-service").digest }}
         - uses: kustomize-set-image
           config:
             path: repo/apps/frontend/overlays/staging
             images:
               - image: vroom-mvp/frontend
                 newName: ama2352/vroom-mvp-frontend
-                useDigest: true
+                digest: ${{ image("docker.io/ama2352/vroom-mvp-frontend").digest }}
         - uses: git-commit
           as: commit
           config:

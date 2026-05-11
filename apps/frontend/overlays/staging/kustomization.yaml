@@ -1,17 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 namespace: vroom-staging
-
 resources:
-  - ../../base
-  - ingress.yaml
-
+- ../../base
+- ingress.yaml
 labels:
-  - pairs:
-      env: staging
-
+- pairs:
+    env: staging
 images:
-  - name: vroom-mvp/frontend
-    newName: ama2352/vroom-mvp-frontend
-    newTag: latest
+- name: vroom-mvp/frontend
+  newName: ama2352/vroom-mvp-frontend
+  digest: sha256:105fbed77f33eff5c37db6c40cb368f9d73e06f2029c6fe776c4e440bf66a673

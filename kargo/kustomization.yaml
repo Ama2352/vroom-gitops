@@ -11,4 +11,5 @@ resources:
   - analysis/ai-health-check.yaml
   - secrets/ai-reporter-secret.yaml
   - secrets/gitops-git-creds.yaml
+  - secrets/dockerhub-creds.yaml
   - project-config.yaml

@@ -19,6 +19,7 @@ spec:
                 containers:
                   - name: reporter
                     image: docker.io/ama2352/vroom-mvp-ai-reporter:latest
+                    imagePullPolicy: Always
                     args: ["--mode=verify"]
                     resources:
                       requests:

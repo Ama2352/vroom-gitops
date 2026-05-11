@@ -17,6 +17,7 @@ spec:
           containers:
             - name: reporter
               image: docker.io/ama2352/vroom-mvp-ai-reporter:latest
+              imagePullPolicy: Always
               args: ["--mode=report"]
               resources:
                 requests:
@@ -62,6 +63,7 @@ spec:
           containers:
             - name: reporter
               image: docker.io/ama2352/vroom-mvp-ai-reporter:latest
+              imagePullPolicy: Always
               args: ["--mode=report"]
               resources:
                 requests:
@@ -107,6 +109,7 @@ spec:
           containers:
             - name: reporter
               image: docker.io/ama2352/vroom-mvp-ai-reporter:latest
+              imagePullPolicy: Always
               args: ["--mode=report"]
               resources:
                 requests:

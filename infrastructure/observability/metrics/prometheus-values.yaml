@@ -42,51 +42,51 @@ prometheus:
     externalUrl: "http://localhost/prometheus"
     routePrefix: "/prometheus"
 
-  additionalPrometheusRulesMap:
-    vroom-alerts:
-      groups:
-        - name: vroom-services
-          interval: 30s
-          rules:
-            - alert: NodeMemoryHigh
-              expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
-              for: 5m
-              labels:
-                severity: warning
-                component: node
-              annotations:
-                summary: "High memory usage on {{ $labels.node }}"
-                description: "Node {{ $labels.node }} memory usage is {{ $value | humanizePercentage }}."
+additionalPrometheusRulesMap:
+  vroom-alerts:
+    groups:
+      - name: vroom-services
+        interval: 30s
+        rules:
+          - alert: NodeMemoryHigh
+            expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+            for: 5m
+            labels:
+              severity: warning
+              component: node
+            annotations:
+              summary: "High memory usage on {{ $labels.node }}"
+              description: "Node {{ $labels.node }} memory usage is {{ $value | humanizePercentage }}."
 
-            - alert: KubernetesPodCrashLooping
-              expr: rate(kube_pod_container_status_restarts_total[15m]) > 0.1
-              for: 5m
-              labels:
-                severity: warning
-                component: kubernetes
-              annotations:
-                summary: "Pod crash looping ({{ $labels.pod }})"
-                description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} restart rate: {{ $value }} restarts/min"
+          - alert: KubernetesPodCrashLooping
+            expr: rate(kube_pod_container_status_restarts_total[15m]) > 0.1
+            for: 5m
+            labels:
+              severity: warning
+              component: kubernetes
+            annotations:
+              summary: "Pod crash looping ({{ $labels.pod }})"
+              description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} restart rate: {{ $value }} restarts/min"
 
-            - alert: KubernetesPodNotHealthy
-              expr: min_over_time(sum by (namespace, pod) (kube_pod_status_phase{phase=~"Pending|Unknown|Failed"})[15m:1m]) > 0
-              for: 15m
-              labels:
-                severity: warning
-                component: kubernetes
-              annotations:
-                summary: "Pod not healthy ({{ $labels.pod }})"
-                description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} has been non-running for 15+ min."
+          - alert: KubernetesPodNotHealthy
+            expr: min_over_time(sum by (namespace, pod) (kube_pod_status_phase{phase=~"Pending|Unknown|Failed"})[15m:1m]) > 0
+            for: 15m
+            labels:
+              severity: warning
+              component: kubernetes
+            annotations:
+              summary: "Pod not healthy ({{ $labels.pod }})"
+              description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} has been non-running for 15+ min."
 
-            - alert: ServiceDown
-              expr: up{job=~"ride.*|user.*|dispatch.*|notification.*"} == 0
-              for: 2m
-              labels:
-                severity: critical
-                component: application
-              annotations:
-                summary: "Service {{ $labels.job }} is DOWN"
-                description: "Service {{ $labels.job }} in {{ $labels.namespace }} unreachable for 2 min."
+          - alert: ServiceDown
+            expr: up{job=~"ride.*|user.*|dispatch.*|notification.*"} == 0
+            for: 2m
+            labels:
+              severity: critical
+              component: application
+            annotations:
+              summary: "Service {{ $labels.job }} is DOWN"
+              description: "Service {{ $labels.job }} in {{ $labels.namespace }} unreachable for 2 min."
 
 grafana:
   adminPassword: "ChangeMeToSecurePassword!"

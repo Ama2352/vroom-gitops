@@ -1,20 +1,16 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 resources:
 - ../../base
 - ingress.yaml
 - secrets/ride-db-secrets.yaml
-
 namespace: vroom-dev
-
 patches:
 - path: patches/resource_limits.yaml
-
 labels:
 - pairs:
     env: dev
 images:
 - name: vroom-mvp/ride-service
   newName: ama2352/vroom-mvp-ride-service
-  newTag: 7d41a3ea
+  digest: sha256:c99820c49a029fa8ee981a70c28f5226a36471d9d99aaad0dc9878c6bd23b8e2

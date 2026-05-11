@@ -27,7 +27,7 @@ spec:
           query: |
             histogram_quantile(0.99, sum by (le) (
               rate(http_request_duration_seconds_bucket{namespace="{{args.target-namespace}}"}[10m])
-            ))
+            )) or vector(0)
       successCondition: result[0] < 2.0
       failureCondition: result[0] >= 5.0
       failureLimit: 2

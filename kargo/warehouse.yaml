@@ -40,8 +40,3 @@ spec:
         imageSelectionStrategy: Digest
         constraint: latest
         discoveryLimit: 20
-    - image:
-        repoURL: docker.io/ama2352/vroom-mvp-ai-reporter
-        imageSelectionStrategy: Digest
-        constraint: latest
-        discoveryLimit: 20

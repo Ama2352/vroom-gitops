@@ -8,8 +8,7 @@ metadata:
     release: kube-prometheus-stack
 spec:
   namespaceSelector:
-    matchNames:
-      - vroom-dev
+    any: true
   selector:
     matchLabels:
       app: user-service
@@ -28,8 +27,7 @@ metadata:
     release: kube-prometheus-stack
 spec:
   namespaceSelector:
-    matchNames:
-      - vroom-dev
+    any: true
   selector:
     matchLabels:
       app: ride-service
@@ -48,8 +46,7 @@ metadata:
     release: kube-prometheus-stack
 spec:
   namespaceSelector:
-    matchNames:
-      - vroom-dev
+    any: true
   selector:
     matchLabels:
       app: dispatch-service
@@ -68,8 +65,7 @@ metadata:
     release: kube-prometheus-stack
 spec:
   namespaceSelector:
-    matchNames:
-      - vroom-dev
+    any: true
   selector:
     matchLabels:
       app: notification-service

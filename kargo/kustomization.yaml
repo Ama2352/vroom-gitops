@@ -11,3 +11,4 @@ resources:
   - analysis/ai-health-check.yaml
   - secrets/ai-reporter-secret.yaml
   - secrets/gitops-git-creds.yaml
+  - promotion-policies.yaml

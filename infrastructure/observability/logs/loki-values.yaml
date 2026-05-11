@@ -43,6 +43,17 @@ loki:
       retention_enabled: true
       retention_delete_delay: 2h
 
+    ruler:
+      storage:
+        type: local
+        local:
+          directory: /data/loki/rules
+      rule_path: /data/loki/rules-temp
+      alertmanager_url: http://kube-prometheus-stack-alertmanager.monitoring:9093
+      ring:
+        kvstore:
+          store: inmemory
+
     # table_manager intentionally omitted — compactor handles retention for boltdb-shipper;
     # having both enabled simultaneously causes conflicts and prevents startup
 
@@ -80,5 +91,3 @@ promtail:
 grafana:
   enabled: false   # managed by kube-prometheus-stack
 
-loki:
-  isDefault: false

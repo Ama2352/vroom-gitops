@@ -37,7 +37,7 @@ spec:
                       name: ai-reporter-secret
                       key: slack-webhook-url
                 - name: PROMETHEUS_URL
-                  value: "http://kube-prometheus-stack-prometheus.monitoring:9090"
+                  value: "http://kube-prometheus-stack-prometheus.monitoring:9090/prometheus"
                 - name: LOKI_URL
                   value: "http://loki-stack.monitoring:3100"
                 - name: TARGET_NAMESPACE
@@ -82,7 +82,7 @@ spec:
                       name: ai-reporter-secret
                       key: slack-webhook-url
                 - name: PROMETHEUS_URL
-                  value: "http://kube-prometheus-stack-prometheus.monitoring:9090"
+                  value: "http://kube-prometheus-stack-prometheus.monitoring:9090/prometheus"
                 - name: LOKI_URL
                   value: "http://loki-stack.monitoring:3100"
                 - name: TARGET_NAMESPACE
@@ -127,7 +127,7 @@ spec:
                       name: ai-reporter-secret
                       key: slack-webhook-url
                 - name: PROMETHEUS_URL
-                  value: "http://kube-prometheus-stack-prometheus.monitoring:9090"
+                  value: "http://kube-prometheus-stack-prometheus.monitoring:9090/prometheus"
                 - name: LOKI_URL
                   value: "http://loki-stack.monitoring:3100"
                 - name: TARGET_NAMESPACE

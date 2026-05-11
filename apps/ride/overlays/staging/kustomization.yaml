@@ -13,4 +13,4 @@ labels:
 images:
 - name: vroom-mvp/ride-service
   newName: ama2352/vroom-mvp-ride-service
-  digest: sha256:f2db7dfc7431938468807aea82ee7c5e5ee7345c8f0b7401a3032ee46a07b73f
+  digest: sha256:33a7f4dc9c72dc31c4a67d4843a2a69133fc402a60446441d6d408b305c835b1

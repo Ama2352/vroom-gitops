@@ -1,0 +1,143 @@
+# Dev: every 30 minutes
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vroom-ai-reporter-dev
+  namespace: monitoring
+spec:
+  schedule: "*/30 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: reporter
+              image: docker.io/ama2352/vroom-mvp-ai-reporter:latest
+              imagePullPolicy: Always
+              args: ["--mode=report"]
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 64Mi
+                limits:
+                  cpu: 200m
+                  memory: 128Mi
+              env:
+                - name: GEMINI_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: ai-reporter-secret
+                      key: gemini-api-key
+                - name: GEMINI_MODEL
+                  value: "gemini-2.5-flash"
+                - name: SLACK_WEBHOOK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: ai-reporter-secret
+                      key: slack-webhook-url
+                - name: PROMETHEUS_URL
+                  value: "http://kube-prometheus-stack-prometheus.monitoring:9090/prometheus"
+                - name: LOKI_URL
+                  value: "http://loki-stack.monitoring:3100"
+                - name: TARGET_NAMESPACE
+                  value: "vroom-dev"
+---
+# Staging: every hour (less active; staggered to avoid Gemini burst)
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vroom-ai-reporter-staging
+  namespace: monitoring
+spec:
+  schedule: "0 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: reporter
+              image: docker.io/ama2352/vroom-mvp-ai-reporter:latest
+              imagePullPolicy: Always
+              args: ["--mode=report"]
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 64Mi
+                limits:
+                  cpu: 200m
+                  memory: 128Mi
+              env:
+                - name: GEMINI_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: ai-reporter-secret
+                      key: gemini-api-key
+                - name: GEMINI_MODEL
+                  value: "gemini-2.5-flash"
+                - name: SLACK_WEBHOOK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: ai-reporter-secret
+                      key: slack-webhook-url
+                - name: PROMETHEUS_URL
+                  value: "http://kube-prometheus-stack-prometheus.monitoring:9090/prometheus"
+                - name: LOKI_URL
+                  value: "http://loki-stack.monitoring:3100"
+                - name: TARGET_NAMESPACE
+                  value: "vroom-staging"
+---
+# Prod: every 30 minutes, offset by 15 min to stagger from dev runs
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vroom-ai-reporter-prod
+  namespace: monitoring
+spec:
+  schedule: "15,45 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: reporter
+              image: docker.io/ama2352/vroom-mvp-ai-reporter:latest
+              imagePullPolicy: Always
+              args: ["--mode=report"]
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 64Mi
+                limits:
+                  cpu: 200m
+                  memory: 128Mi
+              env:
+                - name: GEMINI_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: ai-reporter-secret
+                      key: gemini-api-key
+                - name: GEMINI_MODEL
+                  value: "gemini-2.5-flash"
+                - name: SLACK_WEBHOOK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: ai-reporter-secret
+                      key: slack-webhook-url
+                - name: PROMETHEUS_URL
+                  value: "http://kube-prometheus-stack-prometheus.monitoring:9090/prometheus"
+                - name: LOKI_URL
+                  value: "http://loki-stack.monitoring:3100"
+                - name: TARGET_NAMESPACE
+                  value: "vroom-prod"

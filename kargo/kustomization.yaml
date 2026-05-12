@@ -9,6 +9,7 @@ resources:
   - stages/prod.yaml
   - analysis/prometheus-checks.yaml
   - analysis/ai-health-check.yaml
+  - rbac/ai-reporter-rbac.yaml
   - secrets/ai-reporter-secret.yaml
   - secrets/gitops-git-creds.yaml
   - secrets/dockerhub-creds.yaml

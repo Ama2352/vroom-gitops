@@ -16,6 +16,7 @@ spec:
             template:
               spec:
                 restartPolicy: Never
+                serviceAccountName: ai-reporter
                 containers:
                   - name: reporter
                     image: docker.io/ama2352/vroom-mvp-ai-reporter:latest
@@ -24,10 +25,10 @@ spec:
                     resources:
                       requests:
                         cpu: 50m
-                        memory: 64Mi
+                        memory: 96Mi
                       limits:
                         cpu: 200m
-                        memory: 128Mi
+                        memory: 192Mi
                     env:
                       - name: GEMINI_API_KEY
                         valueFrom:
@@ -49,6 +50,8 @@ spec:
                         value: "{{args.target-namespace}}"
                       - name: VERIFY_WINDOW
                         value: "10m"
+                      - name: BASELINE_WINDOW
+                        value: "30m"
                       - name: STABILIZATION_WAIT_SECONDS
                         value: "{{args.stabilization-wait}}"
       successCondition: result.exitCode == 0

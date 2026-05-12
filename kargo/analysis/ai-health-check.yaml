@@ -7,7 +7,7 @@ spec:
   args:
     - name: target-namespace
     - name: stabilization-wait
-      value: "300"   # default; dev stage overrides to 60
+      value: "300" # default; dev stage overrides to 60
   metrics:
     - name: ai-health-analysis
       provider:
@@ -36,7 +36,7 @@ spec:
                             name: ai-reporter-secret
                             key: gemini-api-key
                       - name: GEMINI_MODEL
-                        value: "gemini-2.5-flash"
+                        value: "gemini-2.5-flash-lite"
                       - name: SLACK_WEBHOOK_URL
                         valueFrom:
                           secretKeyRef:

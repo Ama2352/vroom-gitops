@@ -13,4 +13,4 @@ labels:
 images:
 - name: vroom-mvp/notification-service
   newName: ama2352/vroom-mvp-notification-service
-  digest: sha256:28f44e1d13f16583b4c0d339d6111dc6b07b2396d6a1efe14314b3c6116d8554
+  digest: sha256:9ee16178a39ce48790a441d9fdf4c321f2990d5486fca6080356fb77e4c1729e

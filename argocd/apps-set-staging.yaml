@@ -14,7 +14,7 @@ spec:
             exclude: true
   template:
     metadata:
-      name: 'vroom-staging-{{path.basename}}'
+      name: "vroom-staging-{{path.basename}}"
       labels:
         env: staging
         # kargo.akuity.io/stage: staging
@@ -25,13 +25,13 @@ spec:
       source:
         repoURL: https://github.com/Ama2352/vroom-gitops.git
         targetRevision: HEAD
-        path: '{{path}}/overlays/staging'
+        path: "{{path}}/overlays/staging"
       destination:
         server: https://kubernetes.default.svc
         namespace: vroom-staging
       syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+        # automated:
+        #   prune: true
+        #   selfHeal: true
         syncOptions:
           - CreateNamespace=true

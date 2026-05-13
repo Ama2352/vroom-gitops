@@ -1,9 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- cronjob.yaml
-- secrets/ai-reporter-secret.yaml
+# - cronjob.yaml
+# - secrets/ai-reporter-secret.yaml
 images:
-- name: docker.io/ama2352/vroom-mvp-ai-reporter
-  newName: ama2352/vroom-mvp-ai-reporter
-  digest: sha256:79352f3ff063fe021ddb4d05d9b88e957a49e14f92016065d6d58d9061822860
+  - name: docker.io/ama2352/vroom-mvp-ai-reporter
+    newName: ama2352/vroom-mvp-ai-reporter
+    digest: sha256:79352f3ff063fe021ddb4d05d9b88e957a49e14f92016065d6d58d9061822860

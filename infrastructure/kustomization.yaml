@@ -3,12 +3,12 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
-  - cert-manager
+  # - cert-manager
   - postgres
   - redis
   - ingress-middleware.yaml
   - argocd-ingress.yaml
   - observability
-  - kargo
-  - image-pull-secrets
+  # - kargo
+  # - image-pull-secrets
   # - sonarqube

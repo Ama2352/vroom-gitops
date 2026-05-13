@@ -7,5 +7,5 @@ resources:
   - apps-set-dev.yaml
   - apps-set-staging.yaml
   - apps-set-prod.yaml
-  - ai-reporter-app.yaml
-  - kargo-resources.yaml
+  # - ai-reporter-app.yaml
+  # - kargo-resources.yaml

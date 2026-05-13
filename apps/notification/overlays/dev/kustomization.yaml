@@ -13,4 +13,4 @@ labels:
 images:
 - name: vroom-mvp/notification-service
   newName: ama2352/vroom-mvp-notification-service
-  newTag: 09d1be46
+  newTag: a832c384

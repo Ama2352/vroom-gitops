@@ -12,4 +12,4 @@ labels:
 images:
 - name: vroom-mvp/dispatch-service
   newName: ama2352/vroom-mvp-dispatch-service
-  newTag: 428fc5ed
+  newTag: 9ef30796

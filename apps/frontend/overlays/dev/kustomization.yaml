@@ -7,4 +7,4 @@ resources:
 images:
 - name: vroom-mvp/frontend
   newName: ama2352/vroom-mvp-frontend
-  newTag: 428fc5ed
+  newTag: 9ef30796

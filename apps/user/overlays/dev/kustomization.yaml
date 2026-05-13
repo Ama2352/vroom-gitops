@@ -13,4 +13,4 @@ labels:
 images:
 - name: vroom-mvp/user-service
   newName: ama2352/vroom-mvp-user-service
-  digest: sha256:3b4cdb42fb10d4b25ce0b7de4ef09480abc28866a554713bc27a665f54d4c464
+  newTag: 0b74f714

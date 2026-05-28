@@ -11,32 +11,32 @@ spec:
         repoURL: https://github.com/Ama2352/vroom-gitops.git
         branch: main
         commitSelectionStrategy: NewestFromBranch
-        discoveryLimit: 5
+        discoveryLimit: 1
         includePaths:
           - "regex:^apps/[^/]+/overlays/dev/.*$"
     # Image subscribers: detect new image tags pushed to DockerHub by CI.
     - image:
-        repoURL: docker.io/ama2352/vroom-mvp-user-service
+        repoURL: ghcr.io/ama2352/vroom-mvp-user-service
         imageSelectionStrategy: SemVer
         semverConstraint: "^1.0.0-0"
-        discoveryLimit: 5
+        discoveryLimit: 1
     - image:
-        repoURL: docker.io/ama2352/vroom-mvp-ride-service
+        repoURL: ghcr.io/ama2352/vroom-mvp-ride-service
         imageSelectionStrategy: SemVer
         semverConstraint: "^1.0.0-0"
-        discoveryLimit: 5
+        discoveryLimit: 1
     - image:
-        repoURL: docker.io/ama2352/vroom-mvp-dispatch-service
+        repoURL: ghcr.io/ama2352/vroom-mvp-dispatch-service
         imageSelectionStrategy: SemVer
         semverConstraint: "^1.0.0-0"
-        discoveryLimit: 5
+        discoveryLimit: 1
     - image:
-        repoURL: docker.io/ama2352/vroom-mvp-notification-service
+        repoURL: ghcr.io/ama2352/vroom-mvp-notification-service
         imageSelectionStrategy: SemVer
         semverConstraint: "^1.0.0-0"
-        discoveryLimit: 5
+        discoveryLimit: 1
     - image:
-        repoURL: docker.io/ama2352/vroom-mvp-frontend
+        repoURL: ghcr.io/ama2352/vroom-mvp-frontend
         imageSelectionStrategy: SemVer
         semverConstraint: "^1.0.0-0"
-        discoveryLimit: 5
+        discoveryLimit: 1

@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
   - ingress.yaml
   - metrics/prometheus-chart.yaml
-  - metrics/alertmanager-slack-secret.yaml
   - metrics/service-monitors.yaml
   - logs/loki-chart.yaml
   - metrics/traefik-monitor.yaml

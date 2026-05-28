@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: n8n
+  namespace: monitoring
+  annotations:
+    traefik.ingress.kubernetes.io/router.priority: "100"
+spec:
+  rules:
+  - host: 192.168.25.133
+    http:
+      paths:
+      - path: /n8n
+        pathType: Prefix
+        backend:
+          service:
+            name: n8n
+            port:
+              number: 5678

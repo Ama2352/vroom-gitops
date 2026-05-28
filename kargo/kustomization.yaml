@@ -8,9 +8,5 @@ resources:
   - stages/staging.yaml
   - stages/prod.yaml
   - analysis/prometheus-checks.yaml
-  - analysis/ai-health-check.yaml
-  - rbac/ai-reporter-rbac.yaml
-  - secrets/ai-reporter-secret.yaml
-  - secrets/gitops-git-creds.yaml
-  - secrets/dockerhub-creds.yaml
+  # secrets/ is managed by vroom-secrets ArgoCD app (see vroom-gitops/secrets/)
   - project-config.yaml

@@ -40,14 +40,3 @@ metadata:
   name: vroom-kargo
   labels:
     component: kargo
----
-# SonarQube's embedded Elasticsearch requires vm.max_map_count=524288.
-# The chart's initContainer sets this via a privileged pod at startup.
-# The privileged PSA label explicitly permits this in the sonarqube namespace.
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: sonarqube
-  labels:
-    pod-security.kubernetes.io/enforce: privileged
-    pod-security.kubernetes.io/enforce-version: latest

@@ -24,36 +24,36 @@ spec:
             path: repo/apps/user/overlays/staging
             images:
               - image: vroom-mvp/user-service
-                newName: ama2352/vroom-mvp-user-service
-                newTag: ${{ imageFrom("docker.io/ama2352/vroom-mvp-user-service").Tag }}
+                newName: ghcr.io/ama2352/vroom-mvp-user-service
+                newTag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-user-service").Tag }}
         - uses: kustomize-set-image
           config:
             path: repo/apps/ride/overlays/staging
             images:
               - image: vroom-mvp/ride-service
-                newName: ama2352/vroom-mvp-ride-service
-                newTag: ${{ imageFrom("docker.io/ama2352/vroom-mvp-ride-service").Tag }}
+                newName: ghcr.io/ama2352/vroom-mvp-ride-service
+                newTag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-ride-service").Tag }}
         - uses: kustomize-set-image
           config:
             path: repo/apps/dispatch/overlays/staging
             images:
               - image: vroom-mvp/dispatch-service
-                newName: ama2352/vroom-mvp-dispatch-service
-                newTag: ${{ imageFrom("docker.io/ama2352/vroom-mvp-dispatch-service").Tag }}
+                newName: ghcr.io/ama2352/vroom-mvp-dispatch-service
+                newTag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-dispatch-service").Tag }}
         - uses: kustomize-set-image
           config:
             path: repo/apps/notification/overlays/staging
             images:
               - image: vroom-mvp/notification-service
-                newName: ama2352/vroom-mvp-notification-service
-                newTag: ${{ imageFrom("docker.io/ama2352/vroom-mvp-notification-service").Tag }}
+                newName: ghcr.io/ama2352/vroom-mvp-notification-service
+                newTag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-notification-service").Tag }}
         - uses: kustomize-set-image
           config:
             path: repo/apps/frontend/overlays/staging
             images:
               - image: vroom-mvp/frontend
-                newName: ama2352/vroom-mvp-frontend
-                newTag: ${{ imageFrom("docker.io/ama2352/vroom-mvp-frontend").Tag }}
+                newName: ghcr.io/ama2352/vroom-mvp-frontend
+                newTag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-frontend").Tag }}
         - uses: git-commit
           as: commit
           config:
@@ -93,7 +93,6 @@ spec:
   verification:
     analysisTemplates:
       - name: prometheus-checks
-      - name: ai-health-check
     args:
       - name: target-namespace
         value: vroom-staging

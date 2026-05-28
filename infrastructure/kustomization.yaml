@@ -10,5 +10,6 @@ resources:
   - argocd-ingress.yaml
   - observability
   # - kargo
-  # - image-pull-secrets
-  # - sonarqube
+  - n8n
+  - runbook-retriever
+  - kubectl-executor

@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
 - ../../base
 - ingress.yaml
-- secrets/ride-db-secrets.yaml
 namespace: vroom-staging
 patches:
 - path: patches/resource_limits.yaml

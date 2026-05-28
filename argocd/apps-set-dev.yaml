@@ -10,8 +10,6 @@ spec:
         revision: HEAD
         directories:
           - path: apps/*
-          - path: apps/ai-reporter   # ai-reporter has no overlays structure; managed as standalone App
-            exclude: true
   template:
     metadata:
       name: 'vroom-dev-{{path.basename}}'

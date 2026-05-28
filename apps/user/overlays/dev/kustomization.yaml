@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
 - ../../base
 - ingress.yaml
-- secrets/user-db-secrets.yaml
 namespace: vroom-dev
 patches:
 - path: patches/resource_limits.yaml

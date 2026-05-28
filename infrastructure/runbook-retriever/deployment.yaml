@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: runbook-retriever
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: runbook-retriever
+  template:
+    metadata:
+      labels:
+        app: runbook-retriever
+    spec:
+      containers:
+      - name: retriever
+        image: ghcr.io/ama2352/vroom-mvp-runbook-retriever:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DOCS_DIR
+          value: /docs
+        volumeMounts:
+        - name: docs
+          mountPath: /docs
+          readOnly: true
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 30
+      volumes:
+      - name: docs
+        configMap:
+          name: vroom-docs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: runbook-retriever
+  namespace: monitoring
+spec:
+  selector:
+    app: runbook-retriever
+  ports:
+  - port: 5000
+    targetPort: 5000

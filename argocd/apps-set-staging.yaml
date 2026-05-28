@@ -10,8 +10,6 @@ spec:
         revision: HEAD
         directories:
           - path: apps/*
-          - path: apps/ai-reporter
-            exclude: true
   template:
     metadata:
       name: "vroom-staging-{{path.basename}}"

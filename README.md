@@ -1,60 +1,75 @@
-# Vroom GitOps: Multi-Stage Promotion with Kargo & ArgoCD
+# vroom-gitops
 
-This repository is the central "Source of Truth" for the **Vroom** ecosystem. It manages the desired state of all environments (Dev, Staging, Prod) using a sophisticated GitOps workflow powered by **ArgoCD** and **Kargo**.
+GitOps source of truth for the **Vroom** ride-hailing platform. ArgoCD reads this repo to deploy and reconcile all cluster state. Kargo reads it to promote images across environments.
 
-## 🏗️ Ecosystem Overview
+Part of a three-repo setup:
+- [vroom-services](https://github.com/Ama2352/vroom-services) — application source + CI
+- **vroom-gitops** (this repo) — delivery manifests
+- [vroom-infra](https://github.com/Ama2352/vroom-infra) — K3s cluster provisioning
 
-The Vroom project is split into three specialized repositories:
+---
 
-1.  **[vroom-services](https://github.com/Ama2352/vroom-services)**: Go microservices source code, CI pipelines (GitLab CI), and AI-driven health reporters.
-2.  **[vroom-infra](https://github.com/Ama2352/vroom-infra)**: Infrastructure-as-Code using Vagrant & Ansible to provision the 3-node K3s cluster.
-3.  **[vroom-gitops](https://github.com/Ama2352/vroom-gitops)** (Current): Kustomize overlays, Helm charts, and Kargo promotion policies.
+## Repository Layout
 
-## 🚀 The Promotion Pipeline
-
-Unlike standard GitOps which often lacks a formal concept of "promotion," this project uses **Kargo** to manage the lifecycle of a release from code commit to production.
-
-```mermaid
-graph LR
-    subgraph CI [vroom-services]
-        Commit --> GitLabCI[GitLab CI]
-        GitLabCI --> Image[Docker Hub]
-    end
-
-    subgraph CD [vroom-gitops]
-        Image --> Warehouse[Kargo Warehouse]
-        Warehouse --> Dev[Dev Stage]
-        Dev -- "Automated Verification" --> Staging[Staging Stage]
-        Staging -- "AI Health Gate" --> Prod[Prod Stage]
-    end
-
-    Dev --> ArgoCD[ArgoCD Sync]
-    Staging --> ArgoCD
-    Prod --> ArgoCD
+```
+vroom-gitops/
+├── root-app.yaml       ArgoCD bootstrap — apply this once to seed the cluster
+├── bootstrap/          ArgoCD Application and ApplicationSet definitions
+│   ├── apps-set-*.yaml   ApplicationSets (one per environment)
+│   ├── infra.yaml        Deploys platform/
+│   ├── kargo-resources.yaml  Deploys delivery/
+│   └── vroom-secrets.yaml    Deploys secrets/ (sync wave -2)
+├── apps/               Kustomize base + overlays per service
+│   └── <service>/
+│       ├── base/
+│       └── overlays/{dev,staging,prod}/
+├── platform/           Cluster infrastructure
+│   ├── postgres/         PostgreSQL
+│   ├── redis/            Redis
+│   ├── observability/    Prometheus + Loki + Grafana + Tempo
+│   │   ├── prometheus/   kube-prometheus-stack, ServiceMonitors
+│   │   └── loki/         Loki chart
+│   ├── cert-manager/
+│   ├── n8n/              Workflow automation (ReAct agent orchestrator)
+│   ├── kubectl-executor/ Allowlist kubectl gateway
+│   └── runbook-retriever/ RAG runbook service
+├── delivery/           Kargo project CRDs
+│   ├── warehouse.yaml    Watches GHCR for new image tags
+│   ├── stages/           dev → staging → prod with verification gates
+│   └── analysis/         AnalysisTemplates (prometheus-checks)
+└── secrets/            SealedSecrets per namespace (never plaintext)
+    ├── vroom-dev/  vroom-staging/  vroom-prod/
+    ├── vroom-kargo/  monitoring/  platform/
+    └── kustomization.yaml
 ```
 
-### Key Features:
+---
 
-- **Promotion Gates:** Each stage transition is protected by automated verification.
-- **ArgoCD Integration:** Kargo updates the Git state (Kustomize overlays), and ArgoCD synchronizes the cluster state.
-- **Sealed Secrets:** All credentials are encrypted using **Bitnami Sealed Secrets**, making the Git repo safe for public hosting.
-- **Kustomize Overlays:** Environment-specific configurations managed via a clean overlay structure.
+## How deployment works
 
-## 📂 Directory Structure
-
-```text
-.
-├── apps                # ArgoCD Application manifests
-├── infrastructure      # Cluster-wide components (Sealed Secrets, Monitoring stack)
-├── kargo               # Kargo Warehouse and Stage definitions
-└── testing             # AnalysisTemplates for automated health verification
+```
+GitLab CI builds image → pushes to GHCR
+  → CI patches apps/<svc>/overlays/dev/ (image tag)
+  → ArgoCD syncs vroom-dev namespace
+  → Kargo Warehouse detects new tag → promotes dev→staging→prod
+  → Each stage gate: prometheus-checks AnalysisRun must pass
 ```
 
-## 🛠️ Usage
+---
 
-1.  **Provisioning**: The infrastructure and root applications are automatically deployed via [vroom-infra](https://github.com/Ama2352/vroom-infra). Run `vagrant up` in the infra repo to start the cluster.
-2.  **Bootstrap (Manual Option)**: If you need to manually re-bootstrap the GitOps engine:
-    ```bash
-    kubectl apply -f root-app.yaml
-    ```
-3.  **Promote**: Use the Kargo UI or CLI to promote images through stages.
+## Bootstrap a new cluster
+
+```bash
+# 1. Install Sealed Secrets controller (required to decrypt secrets)
+kubectl apply -f https://github.com/bitnami-labs/sealed-secrets/releases/latest/download/controller.yaml
+
+# 2. Seed ArgoCD — it takes over from here
+kubectl apply -f root-app.yaml
+```
+
+---
+
+## Documentation
+
+- [Environments & promotion gates](docs/environments.md)
+- [Sealed secrets procedure](docs/secrets.md)

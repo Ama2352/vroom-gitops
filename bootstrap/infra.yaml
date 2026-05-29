@@ -1,22 +1,23 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: vroom-kargo-resources
+  name: vroom-infrastructure
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   project: default
   source:
     repoURL: https://github.com/Ama2352/vroom-gitops.git
     targetRevision: HEAD
-    path: kargo
+    path: platform
   destination:
     server: https://kubernetes.default.svc
-    namespace: vroom
+    namespace: platform
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true
       - SkipDryRunOnMissingResource=true

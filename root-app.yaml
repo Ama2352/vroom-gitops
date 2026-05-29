@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/Ama2352/vroom-gitops.git
     targetRevision: HEAD
-    path: argocd
+    path: bootstrap
   destination:
     server: https://kubernetes.default.svc
     namespace: default

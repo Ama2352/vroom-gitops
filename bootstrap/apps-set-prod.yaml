@@ -15,9 +15,9 @@ spec:
       name: 'vroom-prod-{{path.basename}}'
       labels:
         env: prod
-        # kargo.akuity.io/stage: prod
+        kargo.akuity.io/stage: prod
       annotations:
-        # kargo.akuity.io/authorized-stage: vroom:prod
+        kargo.akuity.io/authorized-stage: vroom:prod
     spec:
       project: default
       source:

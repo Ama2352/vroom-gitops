@@ -3,13 +3,13 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
-  # - cert-manager
+  - cert-manager
   - postgres
   - redis
   - ingress-middleware.yaml
   - argocd-ingress.yaml
   - observability
-  # - kargo
+  - kargo-chart
   - n8n
   - runbook-retriever
   - kubectl-executor

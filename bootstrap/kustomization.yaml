@@ -7,4 +7,4 @@ resources:
   - apps-set-dev.yaml
   - apps-set-staging.yaml
   - apps-set-prod.yaml
-  # - kargo-resources.yaml
+  - kargo-resources.yaml

@@ -4,7 +4,7 @@ metadata:
   name: runbook-retriever
   namespace: monitoring
 spec:
-  replicas: 1
+  replicas: 0  # scaled down until image ghcr.io/ama2352/vroom-mvp-runbook-retriever is built and pushed
   selector:
     matchLabels:
       app: runbook-retriever

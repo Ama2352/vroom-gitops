@@ -36,15 +36,15 @@ spec:
         - containerPort: 5678
         env:
         - name: N8N_HOST
-          value: "192.168.25.133"
+          value: "192.168.242.10"
         - name: N8N_PORT
           value: "5678"
         - name: N8N_PROTOCOL
           value: "http"
         - name: WEBHOOK_URL
-          value: "http://192.168.25.133/n8n/"
+          value: "http://192.168.242.10/n8n/"
         - name: N8N_EDITOR_BASE_URL
-          value: "http://192.168.25.133/n8n/"
+          value: "http://192.168.242.10/n8n/"
         - name: N8N_PATH
           value: "/n8n/"
         - name: N8N_BASIC_AUTH_ACTIVE

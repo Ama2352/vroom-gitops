@@ -35,7 +35,7 @@ metadata:
   name: kubectl-executor
   namespace: monitoring
 spec:
-  replicas: 1
+  replicas: 0  # scaled down until image ghcr.io/ama2352/vroom-mvp-kubectl-executor is built and pushed
   selector:
     matchLabels:
       app: kubectl-executor

@@ -11,7 +11,7 @@ spec:
       targetRevision: 56.0.0
       helm:
         valueFiles:
-          - $values/infrastructure/observability/metrics/prometheus-values.yaml
+          - $values/platform/observability/prometheus/prometheus-values.yaml
     - repoURL: https://github.com/Ama2352/vroom-gitops.git
       targetRevision: HEAD
       ref: values

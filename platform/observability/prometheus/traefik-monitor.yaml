@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -20,6 +21,8 @@ metadata:
   namespace: monitoring
   labels:
     release: kube-prometheus-stack
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
 spec:
   selector:
     matchLabels:

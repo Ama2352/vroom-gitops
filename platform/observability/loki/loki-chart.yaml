@@ -11,7 +11,7 @@ spec:
       targetRevision: 2.10.2
       helm:
         valueFiles:
-          - $values/infrastructure/observability/logs/loki-values.yaml
+          - $values/platform/observability/loki/loki-values.yaml
     - repoURL: https://github.com/Ama2352/vroom-gitops.git
       targetRevision: HEAD
       ref: values

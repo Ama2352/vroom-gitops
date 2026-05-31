@@ -96,5 +96,3 @@ spec:
     args:
       - name: target-namespace
         value: vroom-dev
-      - name: stabilization-wait
-        value: "60"

@@ -11,5 +11,5 @@ labels:
     env: staging
 images:
 - name: vroom-mvp/ride-service
-  newName: ama2352/vroom-mvp-ride-service
-  digest: sha256:fea2e94a52ab5e241720680f3e5c4c05334f7e2f9cf2024df2094470765f3591
+  newName: ghcr.io/ama2352/vroom-mvp-ride-service
+  newTag: v1.0.0-build.18-54ccdd1b

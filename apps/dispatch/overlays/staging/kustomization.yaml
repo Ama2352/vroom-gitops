@@ -11,5 +11,5 @@ labels:
     env: staging
 images:
 - name: vroom-mvp/dispatch-service
-  newName: ama2352/vroom-mvp-dispatch-service
-  digest: sha256:9031fed4eb512878f16a1cb0026bd26751f4ce06e9c0f38a7c2d81ecb7014bfe
+  newName: ghcr.io/ama2352/vroom-mvp-dispatch-service
+  newTag: v1.0.0-build.18-54ccdd1b

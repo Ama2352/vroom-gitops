@@ -18,13 +18,6 @@ spec:
         image: vroom-mvp/runbook-retriever:latest
         ports:
         - containerPort: 5000
-        env:
-        - name: DOCS_DIR
-          value: /docs
-        volumeMounts:
-        - name: docs
-          mountPath: /docs
-          readOnly: true
         resources:
           requests:
             memory: "64Mi"
@@ -37,10 +30,6 @@ spec:
             port: 5000
           initialDelaySeconds: 10
           periodSeconds: 30
-      volumes:
-      - name: docs
-        configMap:
-          name: vroom-docs
 ---
 apiVersion: v1
 kind: Service

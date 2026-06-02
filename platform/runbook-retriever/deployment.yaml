@@ -4,7 +4,7 @@ metadata:
   name: runbook-retriever
   namespace: monitoring
 spec:
-  replicas: 0  # scaled down until image ghcr.io/ama2352/vroom-mvp-runbook-retriever is built and pushed
+  replicas: 1
   selector:
     matchLabels:
       app: runbook-retriever
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: retriever
-        image: ghcr.io/ama2352/vroom-mvp-runbook-retriever:latest
+        image: vroom-mvp/runbook-retriever:latest
         ports:
         - containerPort: 5000
         env:

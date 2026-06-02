@@ -3,3 +3,8 @@ kind: Kustomization
 resources:
   - deployment.yaml
   # kubectl-executor-sealed-secret.yaml added here after sealing (see INSTRUCTIONS.md Plan 10)
+
+images:
+- name: vroom-mvp/kubectl-executor
+  newName: ghcr.io/ama2352/vroom-mvp-kubectl-executor
+  newTag: latest

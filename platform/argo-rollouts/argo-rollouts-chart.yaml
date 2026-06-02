@@ -13,7 +13,7 @@ spec:
     targetRevision: 2.40.10
     helm:
       valuesObject:
-        installCRDs: false   # CRDs managed as raw YAML in platform/argo-rollouts-crds/
+        installCRDs: true
         controller:
           replicas: 1
           resources:

@@ -10,7 +10,6 @@ resources:
   - argocd-ingress.yaml
   - observability
   - kargo-chart
-  - argo-rollouts-crds
   - argo-rollouts
   - n8n
   - runbook-retriever

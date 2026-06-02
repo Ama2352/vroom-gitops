@@ -59,6 +59,8 @@ spec:
             secretKeyRef:
               name: n8n-secret
               key: encryption-key
+        - name: N8N_SECURE_COOKIE
+          value: "false"
         - name: GENERIC_TIMEZONE
           value: "UTC"
         - name: DB_TYPE

@@ -3,4 +3,4 @@ kind: Kustomization
 resources:
   - deployment.yaml
   - ingress.yaml
-  # n8n-sealed-secret.yaml added here after sealing (see INSTRUCTIONS.md Plan 10)
+

@@ -36,17 +36,15 @@ spec:
         - containerPort: 5678
         env:
         - name: N8N_HOST
-          value: "192.168.25.139"
+          value: "192.168.242.10"
         - name: N8N_PORT
           value: "5678"
         - name: N8N_PROTOCOL
           value: "http"
         - name: WEBHOOK_URL
-          value: "http://192.168.25.139/n8n/"
+          value: "http://192.168.242.10:30078/"
         - name: N8N_EDITOR_BASE_URL
-          value: "http://192.168.25.139/n8n/"
-        - name: N8N_PATH
-          value: "/n8n/"
+          value: "http://192.168.242.10:30078/"
         - name: N8N_BASIC_AUTH_ACTIVE
           value: "true"
         - name: N8N_BASIC_AUTH_USER
@@ -86,8 +84,10 @@ metadata:
   name: n8n
   namespace: monitoring
 spec:
+  type: NodePort
   selector:
     app: n8n
   ports:
   - port: 5678
     targetPort: 5678
+    nodePort: 30078

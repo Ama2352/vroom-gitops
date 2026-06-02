@@ -11,5 +11,5 @@ labels:
     env: staging
 images:
 - name: vroom-mvp/user-service
-  newName: ama2352/vroom-mvp-user-service
-  digest: sha256:3b4cdb42fb10d4b25ce0b7de4ef09480abc28866a554713bc27a665f54d4c464
+  newName: ghcr.io/ama2352/vroom-mvp-user-service
+  newTag: v1.0.0-build.18-54ccdd1b

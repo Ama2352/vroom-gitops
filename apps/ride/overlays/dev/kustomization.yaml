@@ -12,4 +12,4 @@ labels:
 images:
 - name: vroom-mvp/ride-service
   newName: ghcr.io/ama2352/vroom-mvp-ride-service
-  newTag: v1.0.0-build.18-54ccdd1b
+  newTag: v1.0.0-build.17-9de8a49b

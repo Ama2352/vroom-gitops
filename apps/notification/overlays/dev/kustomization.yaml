@@ -11,5 +11,5 @@ labels:
     env: dev
 images:
 - name: vroom-mvp/notification-service
-  newName: ama2352/vroom-mvp-notification-service
-  newTag: 9ef30796
+  newName: ghcr.io/ama2352/vroom-mvp-notification-service
+  newTag: v1.0.0-build.17-9de8a49b

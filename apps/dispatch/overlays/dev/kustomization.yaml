@@ -11,5 +11,5 @@ labels:
     env: dev
 images:
 - name: vroom-mvp/dispatch-service
-  newName: ama2352/vroom-mvp-dispatch-service
-  newTag: 9ef30796
+  newName: ghcr.io/ama2352/vroom-mvp-dispatch-service
+  newTag: v1.0.0-build.17-9de8a49b

@@ -84,6 +84,7 @@ additionalPrometheusRulesMap:
             labels:
               severity: critical
               component: application
+              service: "{{ $labels.job }}"
             annotations:
               summary: "Service {{ $labels.job }} is DOWN"
               description: "Service {{ $labels.job }} in {{ $labels.namespace }} unreachable for 2 min."
@@ -183,6 +184,13 @@ alertmanager:
             severity: critical
           receiver: "slack-notifications"
           group_wait: 0s
+          continue: true          # critical → Slack immediately, then also falls through to n8n route below
+        - matchers:
+            - component = "application"
+          receiver: 'n8n-incident-agent'
+          group_by: ['service', 'alertname']
+          group_wait: 30s
+          repeat_interval: 4h
 
     receivers:
       - name: "slack-notifications"
@@ -198,6 +206,10 @@ alertmanager:
               *Details:* {{ .Annotations.summary }}
               *Description:* {{ .Annotations.description }}
               {{ end }}
+      - name: 'n8n-incident-agent'
+        webhook_configs:
+          - url: 'http://n8n.monitoring.svc.cluster.local:5678/webhook/vroom-alert'
+            send_resolved: false
 
 nodeExporter:
   enabled: true

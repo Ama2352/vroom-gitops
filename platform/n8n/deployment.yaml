@@ -59,14 +59,7 @@ spec:
             secretKeyRef:
               name: n8n-secret
               key: encryption-key
-        - name: OPENROUTER_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: n8n-secret
-              key: openrouter-api-key
         - name: N8N_SECURE_COOKIE
-          value: "false"
-        - name: N8N_BLOCK_ENV_ACCESS_IN_NODE
           value: "false"
         - name: GENERIC_TIMEZONE
           value: "UTC"

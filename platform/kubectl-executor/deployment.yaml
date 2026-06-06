@@ -47,7 +47,7 @@ spec:
       serviceAccountName: kubectl-executor-sa
       containers:
       - name: executor
-        image: vroom-mvp/kubectl-executor:latest
+        image: ghcr.io/ama2352/vroom-mvp-kubectl-executor:latest
         ports:
         - containerPort: 5001
         envFrom:

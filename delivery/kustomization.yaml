@@ -4,9 +4,11 @@ kind: Kustomization
 resources:
   - project.yaml
   - warehouse.yaml
+  - platform-warehouse.yaml
   - analysis/prometheus-checks.yaml  # must be before stages so Kargo can validate references
   - stages/dev.yaml
   - stages/staging.yaml
   - stages/prod.yaml
+  - stages/platform.yaml
   # secrets/ is managed by vroom-secrets ArgoCD app (see vroom-gitops/secrets/)
   - project-config.yaml

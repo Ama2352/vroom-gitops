@@ -1,0 +1,51 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: platform
+  namespace: vroom
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: platform-warehouse
+      sources:
+        direct: true
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/Ama2352/vroom-gitops.git
+            checkout:
+              - branch: main
+                path: ./repo
+        - uses: kustomize-set-image
+          config:
+            path: repo/platform/kubectl-executor
+            images:
+              - image: vroom-mvp/kubectl-executor
+                newName: ghcr.io/ama2352/vroom-mvp-kubectl-executor
+                tag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-kubectl-executor").Tag }}
+        - uses: kustomize-set-image
+          config:
+            path: repo/platform/runbook-retriever
+            images:
+              - image: vroom-mvp/runbook-retriever
+                newName: ghcr.io/ama2352/vroom-mvp-runbook-retriever
+                tag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-runbook-retriever").Tag }}
+        - uses: git-commit
+          as: commit
+          config:
+            path: ./repo
+            message: "chore(gitops): update platform tool images"
+        - uses: git-push
+          config:
+            path: ./repo
+        - uses: argocd-update
+          config:
+            apps:
+              - name: vroom-infrastructure
+                namespace: argocd
+                sources:
+                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
+                    desiredRevision: ${{ outputs.commit.commit }}

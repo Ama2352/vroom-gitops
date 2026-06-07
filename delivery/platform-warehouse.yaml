@@ -1,0 +1,17 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: platform-warehouse
+  namespace: vroom
+spec:
+  subscriptions:
+    - image:
+        repoURL: ghcr.io/ama2352/vroom-mvp-kubectl-executor
+        imageSelectionStrategy: SemVer
+        semverConstraint: "^1.0.0-0"
+        discoveryLimit: 1
+    - image:
+        repoURL: ghcr.io/ama2352/vroom-mvp-runbook-retriever
+        imageSelectionStrategy: SemVer
+        semverConstraint: "^1.0.0-0"
+        discoveryLimit: 1

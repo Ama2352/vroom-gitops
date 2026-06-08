@@ -1,10 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - deployment.yaml
-  # kubectl-executor-sealed-secret.yaml added here after sealing (see INSTRUCTIONS.md Plan 10)
+- deployment.yaml
+# kubectl-executor-sealed-secret.yaml added here after sealing (see INSTRUCTIONS.md Plan 10)
 
 images:
 - name: vroom-mvp/kubectl-executor
   newName: ghcr.io/ama2352/vroom-mvp-kubectl-executor
-  newTag: latest
+  newTag: v1.0.0-build.26-43ff7e8c

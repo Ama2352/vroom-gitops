@@ -5,6 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "-1"
+    kargo.akuity.io/authorized-stage: vroom:platform
 spec:
   project: default
   source:

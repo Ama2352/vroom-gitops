@@ -5,4 +5,4 @@ resources:
 images:
 - name: vroom-mvp/runbook-retriever
   newName: ghcr.io/ama2352/vroom-mvp-runbook-retriever
-  newTag: v1.0.0-build.26-43ff7e8c
+  newTag: v1.0.0-build.27-d2b4881b

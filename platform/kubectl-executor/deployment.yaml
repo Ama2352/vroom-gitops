@@ -10,10 +10,13 @@ metadata:
   name: kubectl-executor-reader
 rules:
 - apiGroups: [""]
-  resources: ["pods", "events"]
+  resources: ["pods", "pods/log", "events", "services", "nodes"]
   verbs: ["get", "list"]
 - apiGroups: ["apps"]
   resources: ["deployments"]
+  verbs: ["get", "list"]
+- apiGroups: ["metrics.k8s.io"]
+  resources: ["pods", "nodes"]
   verbs: ["get", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1

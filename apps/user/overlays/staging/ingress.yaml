@@ -4,7 +4,7 @@ metadata:
   name: user-service
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
-    traefik.ingress.kubernetes.io/router.middlewares: vroom-staging-strip-service-prefix@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: vroom-staging-strip-service-prefix@kubernetescrd,vroom-staging-retry@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:

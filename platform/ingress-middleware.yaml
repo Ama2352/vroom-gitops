@@ -46,3 +46,33 @@ spec:
   stripPrefix:
     prefixes:
       - /argocd
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: retry
+  namespace: vroom-dev
+spec:
+  retry:
+    attempts: 3
+    initialInterval: 100ms
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: retry
+  namespace: vroom-staging
+spec:
+  retry:
+    attempts: 3
+    initialInterval: 100ms
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: retry
+  namespace: vroom-prod
+spec:
+  retry:
+    attempts: 3
+    initialInterval: 100ms

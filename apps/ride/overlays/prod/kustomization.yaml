@@ -6,7 +6,6 @@ resources:
 namespace: vroom-prod
 patches:
 - path: patches/resource_limits.yaml
-- path: patches/replicas.yaml
 labels:
 - pairs:
     env: prod

@@ -5,6 +5,7 @@ namespace: vroom
 resources:
   - deployment.yaml
   - service.yaml
+  - hpa.yaml
 
 labels:
   - pairs:

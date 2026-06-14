@@ -28,5 +28,8 @@ spec:
         server: https://kubernetes.default.svc
         namespace: vroom-prod
       syncPolicy:
+        automated:
+            prune: true
+            selfHeal: true
         syncOptions:
           - CreateNamespace=true

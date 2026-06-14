@@ -5,5 +5,6 @@ resources:
   - vroom-secrets.yaml
   - infra.yaml
   - apps-set-dev.yaml
-  - apps-set-prod.yaml
+  - apps-set-staging.yaml
+  # - apps-set-prod.yaml  # disabled: shared DB schema causes prod/dev data collision
   - kargo-resources.yaml

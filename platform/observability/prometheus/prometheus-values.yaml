@@ -36,6 +36,12 @@ prometheus:
     podMonitorSelector: {}
     podMonitorNamespaceSelector: {}
 
+    additionalArgs:
+      - name: web.enable-remote-write-receiver
+        value: ""
+      - name: enable-feature
+        value: native-histograms
+
     scrapeInterval: 30s
     evaluationInterval: 30s
 

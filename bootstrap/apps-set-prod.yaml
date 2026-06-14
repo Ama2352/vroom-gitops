@@ -28,8 +28,5 @@ spec:
         server: https://kubernetes.default.svc
         namespace: vroom-prod
       syncPolicy:
-        automated:
-          prune: false      # manual sync for prod — ArgoCD won't auto-apply prod changes
-          selfHeal: false
         syncOptions:
           - CreateNamespace=true

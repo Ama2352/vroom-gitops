@@ -7,12 +7,13 @@ prometheus:
     resources:
       requests:
         cpu: 100m
-        memory: 512Mi
+        memory: 768Mi
       limits:
         cpu: 500m
-        memory: 1Gi
+        memory: 2Gi    # was 1Gi — OOMKilled under k6 native-histogram remote-write load
 
     retention: 7d
+    retentionSize: 3GB  # cap TSDB so head block stays bounded during load spikes
     walCompression: true
 
     storageSpec:
@@ -41,6 +42,8 @@ prometheus:
         value: ""
       - name: enable-feature
         value: native-histograms
+      - name: storage.tsdb.max-block-duration
+        value: "1h"    # compact head blocks every hour instead of default 2h; reduces peak WAL memory
 
     scrapeInterval: 30s
     evaluationInterval: 30s

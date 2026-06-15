@@ -7,3 +7,5 @@ resources:
   - prometheus/service-monitors.yaml
   - loki/loki-chart.yaml
   - prometheus/traefik-monitor.yaml
+  - tempo/tempo-chart.yaml
+  - tempo/tempo-ingress.yaml

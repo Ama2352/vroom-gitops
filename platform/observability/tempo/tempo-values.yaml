@@ -1,0 +1,73 @@
+# Tempo single-binary — tuned for 10 GB K3s cluster
+# OTLP gRPC:  tempo.monitoring.svc.cluster.local:4317  (all 4 services point here)
+# HTTP/Query: tempo.monitoring.svc.cluster.local:3100  (Grafana datasource)
+# Retention: 24h (SE361 demo — traces not critical beyond a day)
+
+fullnameOverride: tempo
+
+service:
+  type: ClusterIP
+  port: 3100
+  targetPort: 3100
+  additionalPorts:
+    - name: otlp-grpc
+      port: 4317
+      targetPort: 4317
+      protocol: TCP
+    - name: otlp-http
+      port: 4318
+      targetPort: 4318
+      protocol: TCP
+
+persistence:
+  enabled: true
+  storageClassName: local-path
+  size: 2Gi
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+serviceAccount:
+  create: true
+
+tempoQuery:
+  enabled: false
+
+serviceMonitor:
+  enabled: false
+
+config: |
+  server:
+    http_listen_port: 3100
+    log_level: warn
+
+  distributor:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+
+  ingester:
+    trace_idle_period: 10s
+    max_block_bytes: 1_000_000
+    max_block_duration: 5m
+
+  compactor:
+    compaction:
+      block_retention: 24h
+
+  storage:
+    trace:
+      backend: local
+      wal:
+        path: /var/tempo/wal
+      local:
+        path: /var/tempo/blocks

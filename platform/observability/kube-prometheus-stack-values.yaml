@@ -104,6 +104,18 @@ grafana:
   # Grafana UI credentials
   adminPassword: "ChangeMeToSecurePassword!"
 
+  additionalDataSources:
+    - name: Tempo
+      type: tempo
+      uid: tempo
+      access: proxy
+      url: http://tempo.monitoring.svc.cluster.local:3100
+      isDefault: false
+      version: 1
+      editable: true
+      jsonData:
+        httpMethod: GET
+
   # Subpath configuration
   grafana.ini:
     server:

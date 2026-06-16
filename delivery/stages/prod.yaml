@@ -62,34 +62,9 @@ spec:
         - uses: git-push
           config:
             path: ./repo
-        - uses: argocd-update
-          config:
-            apps:
-              - name: vroom-prod-user
-                namespace: argocd
-                sources:
-                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredRevision: ${{ outputs.commit.commit }}
-              - name: vroom-prod-ride
-                namespace: argocd
-                sources:
-                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredRevision: ${{ outputs.commit.commit }}
-              - name: vroom-prod-dispatch
-                namespace: argocd
-                sources:
-                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredRevision: ${{ outputs.commit.commit }}
-              - name: vroom-prod-notification
-                namespace: argocd
-                sources:
-                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredRevision: ${{ outputs.commit.commit }}
-              - name: vroom-prod-frontend
-                namespace: argocd
-                sources:
-                  - repoURL: https://github.com/Ama2352/vroom-gitops.git
-                    desiredRevision: ${{ outputs.commit.commit }}
+        # argocd-update intentionally omitted — prod overlay is updated in git
+        # but no ArgoCD sync is triggered. apps-set-prod.yaml is disabled in
+        # bootstrap/ to avoid prod/dev shared-DB data collision.
   # Prod requires human approval via `kargo approve` before promotion runs.
   # Verification fires automatically after the promotion completes.
   # A CRIT result fires Slack alerts but does NOT auto-rollback.

@@ -9,7 +9,7 @@ spec:
         kind: Warehouse
         name: vroom-warehouse
       sources:
-        stages: [dev] # only Freight that passed dev verification
+        stages: [staging] # only Freight that passed staging
   promotionTemplate:
     spec:
       steps:

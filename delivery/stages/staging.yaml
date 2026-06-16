@@ -1,0 +1,66 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: staging
+  namespace: vroom
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: vroom-warehouse
+      sources:
+        stages: [dev]
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/Ama2352/vroom-gitops.git
+            checkout:
+              - branch: main
+                path: ./repo
+        - uses: kustomize-set-image
+          config:
+            path: repo/apps/user/overlays/staging
+            images:
+              - image: vroom-mvp/user-service
+                newName: ghcr.io/ama2352/vroom-mvp-user-service
+                tag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-user-service").Tag }}
+        - uses: kustomize-set-image
+          config:
+            path: repo/apps/ride/overlays/staging
+            images:
+              - image: vroom-mvp/ride-service
+                newName: ghcr.io/ama2352/vroom-mvp-ride-service
+                tag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-ride-service").Tag }}
+        - uses: kustomize-set-image
+          config:
+            path: repo/apps/dispatch/overlays/staging
+            images:
+              - image: vroom-mvp/dispatch-service
+                newName: ghcr.io/ama2352/vroom-mvp-dispatch-service
+                tag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-dispatch-service").Tag }}
+        - uses: kustomize-set-image
+          config:
+            path: repo/apps/notification/overlays/staging
+            images:
+              - image: vroom-mvp/notification-service
+                newName: ghcr.io/ama2352/vroom-mvp-notification-service
+                tag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-notification-service").Tag }}
+        - uses: kustomize-set-image
+          config:
+            path: repo/apps/frontend/overlays/staging
+            images:
+              - image: vroom-mvp/frontend
+                newName: ghcr.io/ama2352/vroom-mvp-frontend
+                tag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-frontend").Tag }}
+        - uses: git-commit
+          as: commit
+          config:
+            path: ./repo
+            message: "chore(gitops): promote images to staging"
+        - uses: git-push
+          config:
+            path: ./repo
+        # argocd-update intentionally omitted — staging overlay is updated in git
+        # but no ArgoCD sync is triggered, so no pods are deployed.

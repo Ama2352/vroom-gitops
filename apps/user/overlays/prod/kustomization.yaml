@@ -11,5 +11,5 @@ labels:
     env: prod
 images:
 - name: vroom-mvp/user-service
-  newName: ama2352/vroom-mvp-user-service
-  digest: sha256:be4fa6daa2e9a2b71c866544728b74491dea36eb2166662ed49f31f278eb4018
+  newName: ghcr.io/ama2352/vroom-mvp-user-service
+  newTag: v1.0.0-build.32-da02e4f6

@@ -14,3 +14,4 @@ resources:
   - n8n
   - runbook-retriever
   - kubectl-executor
+  - incident-agent

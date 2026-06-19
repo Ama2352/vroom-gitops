@@ -1,8 +1,5 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-resources:
-- deployment.yaml
-images:
-- name: vroom-mvp/runbook-retriever
-  newName: ghcr.io/ama2352/vroom-mvp-runbook-retriever
-  newTag: v1.0.0-build.27-d2b4881b
+# runbook-retriever removed — replaced by incident-agent (Plan 14/15)
+# ArgoCD prune will remove the Deployment and Service on next sync.
+resources: []

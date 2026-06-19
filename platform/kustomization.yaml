@@ -12,6 +12,5 @@ resources:
   - kargo-chart
   - argo-rollouts
   - n8n
-  - runbook-retriever
   - kubectl-executor
   - incident-agent

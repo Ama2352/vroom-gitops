@@ -11,7 +11,7 @@ spec:
         semverConstraint: "^1.0.0-0"
         discoveryLimit: 1
     - image:
-        repoURL: ghcr.io/ama2352/vroom-mvp-runbook-retriever
+        repoURL: ghcr.io/ama2352/vroom-mvp-incident-agent
         imageSelectionStrategy: SemVer
         semverConstraint: "^1.0.0-0"
         discoveryLimit: 1

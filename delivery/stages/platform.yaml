@@ -28,11 +28,11 @@ spec:
                 tag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-kubectl-executor").Tag }}
         - uses: kustomize-set-image
           config:
-            path: repo/platform/runbook-retriever
+            path: repo/platform/incident-agent
             images:
-              - image: vroom-mvp/runbook-retriever
-                newName: ghcr.io/ama2352/vroom-mvp-runbook-retriever
-                tag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-runbook-retriever").Tag }}
+              - image: vroom-mvp/incident-agent
+                newName: ghcr.io/ama2352/vroom-mvp-incident-agent
+                tag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-incident-agent").Tag }}
         - uses: git-commit
           as: commit
           config:

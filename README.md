@@ -74,7 +74,7 @@ vroom-gitops/
 │   ├── cert-manager/       TLS certificate automation
 │   ├── n8n/                Workflow automation — ReAct incident agent orchestrator
 │   ├── kubectl-executor/   Allowlist-gated kubectl HTTP gateway
-│   └── runbook-retriever/  RAG runbook lookup service
+│   └── incident-agent/     ReAct SRE agent with semantic incident memory
 │
 ├── delivery/               Kargo progressive delivery CRDs
 │   ├── warehouse.yaml      Watches ghcr.io/ama2352/vroom-mvp-* for new image tags

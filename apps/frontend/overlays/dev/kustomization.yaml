@@ -7,4 +7,4 @@ resources:
 images:
 - name: vroom-mvp/frontend
   newName: ghcr.io/ama2352/vroom-mvp-frontend
-  newTag: v1.0.0-build.36-49f22280
+  newTag: v1.0.0-build.37-fb71da81

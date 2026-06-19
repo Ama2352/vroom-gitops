@@ -38,6 +38,7 @@ spec:
             secretKeyRef:
               name: openrouter-secret
               key: api-key
+              optional: true
         - name: EXECUTOR_API_KEY
           valueFrom:
             secretKeyRef:

@@ -32,6 +32,91 @@ roleRef:
   name: kubectl-executor-reader
   apiGroup: rbac.authorization.k8s.io
 ---
+# Namespace-scoped write permissions — one Role+RoleBinding per app namespace.
+# deployments/scale (update): only changes spec.replicas — cannot modify image/env.
+# deployments (patch): needed for rollout restart (patches pod template annotation).
+# Scoped to vroom-* namespaces only — executor cannot touch monitoring/kube-system.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: kubectl-executor-writer
+  namespace: vroom-dev
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments/scale"]
+  verbs: ["update"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: kubectl-executor-writer-binding
+  namespace: vroom-dev
+subjects:
+- kind: ServiceAccount
+  name: kubectl-executor-sa
+  namespace: monitoring
+roleRef:
+  kind: Role
+  name: kubectl-executor-writer
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: kubectl-executor-writer
+  namespace: vroom-staging
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments/scale"]
+  verbs: ["update"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: kubectl-executor-writer-binding
+  namespace: vroom-staging
+subjects:
+- kind: ServiceAccount
+  name: kubectl-executor-sa
+  namespace: monitoring
+roleRef:
+  kind: Role
+  name: kubectl-executor-writer
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: kubectl-executor-writer
+  namespace: vroom-prod
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments/scale"]
+  verbs: ["update"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: kubectl-executor-writer-binding
+  namespace: vroom-prod
+subjects:
+- kind: ServiceAccount
+  name: kubectl-executor-sa
+  namespace: monitoring
+roleRef:
+  kind: Role
+  name: kubectl-executor-writer
+  apiGroup: rbac.authorization.k8s.io
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:

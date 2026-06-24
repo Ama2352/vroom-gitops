@@ -41,6 +41,16 @@ spec:
               name: openrouter-secret
               key: api-key
               optional: true
+        - name: GROQ_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: groq-secret
+              key: api-key
+              optional: true
+        - name: LLM_MOCK
+          value: "false"
+        - name: LLM_MOCK_SCENARIO
+          value: "scale_to_zero"
         - name: EXECUTOR_API_KEY
           valueFrom:
             secretKeyRef:

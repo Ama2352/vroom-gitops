@@ -68,24 +68,24 @@ additionalPrometheusRulesMap:
               description: "Node {{ $labels.node }} memory usage is {{ $value | humanizePercentage }}."
 
           - alert: KubernetesPodCrashLooping
-            expr: rate(kube_pod_container_status_restarts_total{namespace=~"vroom-.*"}[15m]) > 0.1
+            expr: kube_pod_container_status_waiting_reason{reason="CrashLoopBackOff",namespace=~"vroom-.*"} == 1
             for: 5m
             labels:
               severity: warning
               component: application
             annotations:
               summary: "Pod crash looping ({{ $labels.pod }})"
-              description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} restart rate: {{ $value }} restarts/min"
+              description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is in CrashLoopBackOff for 5+ min."
 
           - alert: KubernetesPodNotHealthy
-            expr: min_over_time(sum by (namespace, pod) (kube_pod_status_phase{phase=~"Pending|Unknown|Failed",namespace=~"vroom-.*"})[15m:1m]) > 0
+            expr: kube_pod_container_status_waiting_reason{reason=~"CrashLoopBackOff|OOMKilled|ImagePullBackOff|ErrImagePull|CreateContainerConfigError",namespace=~"vroom-.*"} == 1
             for: 15m
             labels:
               severity: warning
               component: application
             annotations:
               summary: "Pod not healthy ({{ $labels.pod }})"
-              description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} has been non-running for 15+ min."
+              description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} stuck in {{ $labels.reason }} for 15+ min."
 
           - alert: ServiceDown
             expr: up{job=~"ride.*|user.*|dispatch.*|notification.*"} == 0

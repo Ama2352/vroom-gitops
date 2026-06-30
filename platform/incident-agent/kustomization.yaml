@@ -5,4 +5,4 @@ resources:
 images:
 - name: vroom-mvp/incident-agent
   newName: ghcr.io/ama2352/vroom-mvp-incident-agent
-  newTag: v1.0.0-build.70-a5492f20
+  newTag: v1.0.0-build.71-0100e017

@@ -91,17 +91,15 @@ vroom-gitops/
 │   └── analysis/
 │       └── prometheus-checks.yaml  AnalysisTemplate: error rate, P95 latency, OOMKill
 │
-├── secrets/                 SealedSecret resources (never plaintext)
-│   ├── vroom/                Kargo git creds, GHCR image pull
-│   ├── vroom-dev/            Per-service DB DSNs (dev)
-│   ├── vroom-staging/        Per-service DB DSNs (staging)
-│   ├── vroom-prod/           Per-service DB DSNs (prod)
-│   ├── vroom-kargo/          Kargo admin password
-│   ├── platform/             Per-service DB DSNs (shared platform namespace)
-│   ├── monitoring/           Alertmanager Slack webhook, n8n encryption key, kubectl-executor token, LLM API keys (Groq, OpenRouter)
-│   └── kustomization.yaml
-│
-└── docs/images/             README screenshots
+└── secrets/                 SealedSecret resources (never plaintext)
+    ├── vroom/                Kargo git creds, GHCR image pull
+    ├── vroom-dev/            Per-service DB DSNs (dev)
+    ├── vroom-staging/        Per-service DB DSNs (staging)
+    ├── vroom-prod/           Per-service DB DSNs (prod)
+    ├── vroom-kargo/          Kargo admin password
+    ├── platform/             Per-service DB DSNs (shared platform namespace)
+    ├── monitoring/           Alertmanager Slack webhook, n8n encryption key, kubectl-executor token, LLM API keys (Groq, OpenRouter)
+    └── kustomization.yaml
 ```
 
 ---
@@ -152,22 +150,3 @@ All secrets committed to this repo are encrypted `SealedSecret` resources — pl
 | `monitoring` | `kubectl-executor-secret` | Bearer token for kubectl-executor |
 | `monitoring` | `groq-secret` | Groq LLM API key (incident diagnosis agent) |
 | `monitoring` | `openrouter-secret` | OpenRouter LLM API key (incident diagnosis agent, free-tier fallback models) |
-
-Windows fallback (applies pre-sealed secrets directly, without re-sealing):
-
-```powershell
-cd vroom-infra
-./scripts/apply-sealed-secrets.ps1
-```
-
----
-
-## In Action
-
-| CI builds & publishes (vroom-services) | Kargo promotion pipeline |
-|---|---|
-| ![GitLab CI](docs/images/gitlab_ci.png) | ![Kargo pipeline](docs/images/kargo-pipeline.png) |
-
-| Distributed tracing (Tempo) | Incident agent alert (Slack) |
-|---|---|
-| ![Grafana Tempo](docs/images/grafana-tempo.png) | ![Incident agent Slack alert](docs/images/incident-agent-slack.png) |

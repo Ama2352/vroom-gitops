@@ -1,7 +1,5 @@
 # vroom-gitops
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-
 GitOps source of truth for the **Vroom** ride-hailing platform. This repo contains no application code — it contains only the declarations of desired cluster state. ArgoCD continuously reconciles the cluster to match what is here. Kargo promotes images across environments using the same Git-as-the-source-of-truth principle.
 
 Part of a three-repo setup:
@@ -40,8 +38,6 @@ Kargo Warehouse polls GHCR for new image tags
 | **Progressive delivery** | `delivery/` (Kargo) | Automated promotion gated on real Prometheus metrics — not just "pod is Running" |
 | **Sealed Secrets** | `secrets/` | All secrets are encrypted at rest in Git; plaintext never committed |
 | **Sync waves** | `vroom-secrets` at wave -2 | Secrets are decrypted and applied before any workload starts |
-
-Full details: [docs/KARGO_CLI_GUIDE.md in vroom-infra](https://github.com/Ama2352/vroom-infra/blob/main/docs/KARGO_CLI_GUIDE.md) — Kargo command reference and troubleshooting.
 
 ---
 
@@ -95,15 +91,17 @@ vroom-gitops/
 │   └── analysis/
 │       └── prometheus-checks.yaml  AnalysisTemplate: error rate, P95 latency, OOMKill
 │
-└── secrets/                 SealedSecret resources (never plaintext)
-    ├── vroom/                Kargo git creds, GHCR image pull
-    ├── vroom-dev/            Per-service DB DSNs (dev)
-    ├── vroom-staging/        Per-service DB DSNs (staging)
-    ├── vroom-prod/           Per-service DB DSNs (prod)
-    ├── vroom-kargo/          Kargo admin password
-    ├── platform/             Per-service DB DSNs (shared platform namespace)
-    ├── monitoring/           Alertmanager Slack webhook, n8n encryption key, kubectl-executor token, LLM API keys (Groq, OpenRouter)
-    └── kustomization.yaml
+├── secrets/                 SealedSecret resources (never plaintext)
+│   ├── vroom/                Kargo git creds, GHCR image pull
+│   ├── vroom-dev/            Per-service DB DSNs (dev)
+│   ├── vroom-staging/        Per-service DB DSNs (staging)
+│   ├── vroom-prod/           Per-service DB DSNs (prod)
+│   ├── vroom-kargo/          Kargo admin password
+│   ├── platform/             Per-service DB DSNs (shared platform namespace)
+│   ├── monitoring/           Alertmanager Slack webhook, n8n encryption key, kubectl-executor token, LLM API keys (Groq, OpenRouter)
+│   └── kustomization.yaml
+│
+└── docs/images/             README screenshots
 ```
 
 ---
@@ -161,3 +159,15 @@ Windows fallback (applies pre-sealed secrets directly, without re-sealing):
 cd vroom-infra
 ./scripts/apply-sealed-secrets.ps1
 ```
+
+---
+
+## In Action
+
+| CI builds & publishes (vroom-services) | Kargo promotion pipeline |
+|---|---|
+| ![GitLab CI](docs/images/gitlab_ci.png) | ![Kargo pipeline](docs/images/kargo-pipeline.png) |
+
+| Distributed tracing (Tempo) | Incident agent alert (Slack) |
+|---|---|
+| ![Grafana Tempo](docs/images/grafana-tempo.png) | ![Incident agent Slack alert](docs/images/incident-agent-slack.png) |

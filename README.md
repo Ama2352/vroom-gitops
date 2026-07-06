@@ -1,14 +1,47 @@
 # vroom-gitops
 
-GitOps source of truth for the **Vroom** ride-hailing platform. This repo contains no application code — it contains only the declarations of desired cluster state. ArgoCD continuously reconciles the cluster to match what is here. Kargo promotes images across environments using the same Git-as-the-source-of-truth principle.
+## About Vroom
 
-Part of a three-repo setup:
+**Vroom** is a cloud-native MVP built to explore the full DevOps lifecycle — CI/CD, GitOps, progressive delivery, observability, and AI-assisted incident response — under a hard **12 GB RAM** budget across 3 VMs, running on **K3s** instead of full Kubernetes.
+
+The ride-hailing domain (passengers, drivers, trip matching) is a realistic placeholder application — enough business logic to justify real microservices patterns (event-driven architecture, sagas, the outbox pattern). The actual subject of this project is the platform built around it: how the app is shipped, deployed, observed, and kept alive.
+
+This is a 3-repo GitOps setup, each repo with a single responsibility:
 
 | Repo | Responsibility |
-|------|---------------|
-| [vroom-services](https://github.com/Ama2352/vroom-services) | Application source code + CI pipeline |
-| **vroom-gitops** (this repo) | Cluster manifests — ArgoCD reads and reconciles this |
-| [vroom-infra](https://github.com/Ama2352/vroom-infra) | Vagrant + Ansible K3s provisioning |
+|---|---|
+| [vroom-services](https://github.com/Ama2352/vroom-services) | Go microservices + React frontend + CI pipeline |
+| **vroom-gitops** (this repo) | Kustomize + ArgoCD + Kargo — desired cluster state |
+| [vroom-infra](https://github.com/Ama2352/vroom-infra) | Vagrant + Ansible — K3s cluster bootstrap |
+
+## This Repo
+
+The single source of truth for desired cluster state — this repo contains no application code, only declarations. ArgoCD reconciles the cluster to match what is here continuously; Kargo promotes container images across dev/staging/prod using the same Git-as-source-of-truth principle.
+
+---
+
+## Tech Stack
+
+| Category | Technology |
+|---|---|
+| GitOps engine | ArgoCD (App-of-Apps + ApplicationSet) |
+| Progressive delivery | Kargo 1.10.3 + Argo Rollouts 2.40.10 (analysis engine) |
+| Templating | Kustomize (base + dev/staging/prod overlays) |
+| Secrets | Sealed Secrets (strict name+namespace scope) |
+| Observability | kube-prometheus-stack 56.0.0, Loki 2.10.2, Tempo 1.7.2 |
+| Ingress/TLS | Traefik (K3s built-in), cert-manager 1.16.1 |
+| Automation | n8n (incident-response orchestration), kubectl-executor (allowlisted gateway) |
+
+---
+
+## Key Features
+
+- App-of-Apps bootstrap — a single `kubectl apply -f root-app.yaml` seeds the entire cluster
+- ApplicationSet templating — one ArgoCD Application generated per service per environment
+- Kustomize overlays — shared base manifests, only image tag/replica count differ per env
+- Kargo progressive delivery — automated dev→staging promotion gated on real Prometheus metrics (error rate, P95 latency, OOMKill), human approval required for prod
+- Sealed Secrets synced at ArgoCD sync-wave -2, so every secret exists before workloads start
+- Full observability platform (metrics/logs/traces) plus an LLM-assisted incident-response pipeline, all declared here
 
 ---
 
@@ -65,7 +98,7 @@ vroom-gitops/
 │
 ├── platform/                Cluster infrastructure (managed by infra.yaml ArgoCD App)
 │   ├── postgres/            PostgreSQL StatefulSet
-│   ├── redis/               Redis StatefulSet
+│   ├── redis/                Redis StatefulSet
 │   ├── observability/
 │   │   ├── prometheus/      kube-prometheus-stack + ServiceMonitor CRDs
 │   │   ├── loki/            Loki log aggregation

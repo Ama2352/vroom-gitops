@@ -16,7 +16,7 @@ This is a 3-repo GitOps setup, each repo with a single responsibility:
 
 ## This Repo
 
-The single source of truth for desired cluster state — this repo contains no application code, only declarations. ArgoCD reconciles the cluster to match what is here continuously; Kargo promotes container images across dev/staging/prod using the same Git-as-source-of-truth principle.
+The CD (Continuous Delivery) pipeline environment for Vroom — this repo contains no application code, only declarations of desired cluster state. ArgoCD reconciles the cluster to match what is here continuously; Kargo owns the actual delivery mechanics, promoting container images across dev/staging/prod using the same Git-as-source-of-truth principle.
 
 ---
 

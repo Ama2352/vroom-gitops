@@ -76,8 +76,10 @@ metadata:
   name: incident-agent
   namespace: monitoring
 spec:
+  type: NodePort
   selector:
     app: incident-agent
   ports:
   - port: 5002
     targetPort: 5002
+    nodePort: 30080

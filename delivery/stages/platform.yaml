@@ -33,6 +33,13 @@ spec:
               - image: vroom-mvp/incident-agent
                 newName: ghcr.io/ama2352/vroom-mvp-incident-agent
                 tag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-incident-agent").Tag }}
+        - uses: kustomize-set-image
+          config:
+            path: repo/platform/incident-dashboard
+            images:
+              - image: vroom-mvp/incident-dashboard
+                newName: ghcr.io/ama2352/vroom-mvp-incident-dashboard
+                tag: ${{ imageFrom("ghcr.io/ama2352/vroom-mvp-incident-dashboard").Tag }}
         - uses: git-commit
           as: commit
           config:

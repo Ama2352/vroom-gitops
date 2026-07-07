@@ -15,3 +15,8 @@ spec:
         imageSelectionStrategy: SemVer
         semverConstraint: "^1.0.0-0"
         discoveryLimit: 1
+    - image:
+        repoURL: ghcr.io/ama2352/vroom-mvp-incident-dashboard
+        imageSelectionStrategy: SemVer
+        semverConstraint: "^1.0.0-0"
+        discoveryLimit: 1

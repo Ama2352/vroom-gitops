@@ -5,4 +5,4 @@ resources:
 images:
 - name: vroom-mvp/incident-dashboard
   newName: ghcr.io/ama2352/vroom-mvp-incident-dashboard
-  newTag: v1.0.0-build.82-6552a3ab
+  newTag: v1.0.0-build.83-42071677

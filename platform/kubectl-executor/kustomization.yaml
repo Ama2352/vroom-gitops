@@ -7,4 +7,4 @@ resources:
 images:
 - name: vroom-mvp/kubectl-executor
   newName: ghcr.io/ama2352/vroom-mvp-kubectl-executor
-  newTag: v1.0.0-build.64-75d984bf
+  newTag: v1.0.0-build.75-36b12117

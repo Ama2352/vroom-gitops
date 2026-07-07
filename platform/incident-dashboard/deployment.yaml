@@ -20,7 +20,7 @@ spec:
             - containerPort: 5173
           env:
             - name: VITE_AGENT_URL
-              value: "http://192.168.242.10:30080"
+              value: "http://192.168.242.10:30081"
           resources:
             requests:
               memory: "150Mi"

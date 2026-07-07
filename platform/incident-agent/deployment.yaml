@@ -82,4 +82,4 @@ spec:
   ports:
   - port: 5002
     targetPort: 5002
-    nodePort: 30080
+    nodePort: 30081

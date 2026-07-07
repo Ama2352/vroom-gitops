@@ -68,7 +68,7 @@ additionalPrometheusRulesMap:
               description: "Node {{ $labels.node }} memory usage is {{ $value | humanizePercentage }}."
 
           - alert: KubernetesPodCrashLooping
-            expr: kube_pod_container_status_waiting_reason{reason="CrashLoopBackOff",namespace=~"vroom-.*"} == 1
+            expr: kube_pod_container_status_waiting_reason{reason="CrashLoopBackOff",namespace=~"vroom-.*|monitoring|platform"} == 1
             for: 5m
             labels:
               severity: warning
@@ -78,7 +78,7 @@ additionalPrometheusRulesMap:
               description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is in CrashLoopBackOff for 5+ min."
 
           - alert: KubernetesPodNotHealthy
-            expr: kube_pod_container_status_waiting_reason{reason=~"CrashLoopBackOff|OOMKilled|ImagePullBackOff|ErrImagePull|CreateContainerConfigError",namespace=~"vroom-.*"} == 1
+            expr: kube_pod_container_status_waiting_reason{reason=~"CrashLoopBackOff|OOMKilled|ImagePullBackOff|ErrImagePull|CreateContainerConfigError",namespace=~"vroom-.*|monitoring|platform"} == 1
             for: 15m
             labels:
               severity: warning

@@ -56,6 +56,13 @@ spec:
             secretKeyRef:
               name: kubectl-executor-secret
               key: EXECUTOR_API_KEY
+        - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: github-token-secret
+              key: GITHUB_TOKEN
+        - name: GITHUB_GITOPS_REPO
+          value: "Ama2352/vroom-gitops"
         resources:
           requests:
             memory: "200Mi"

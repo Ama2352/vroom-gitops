@@ -87,6 +87,16 @@ additionalPrometheusRulesMap:
               summary: "Pod not healthy ({{ $labels.pod }})"
               description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} stuck in {{ $labels.reason }} for 15+ min."
 
+          - alert: KubernetesPodNotReady
+            expr: kube_pod_status_ready{condition="true",namespace=~"vroom-.*|monitoring|platform"} == 0
+            for: 2m
+            labels:
+              severity: warning
+              component: application
+            annotations:
+              summary: "Pod is not ready ({{ $labels.pod }})"
+              description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is not ready for 2+ min."
+
           - alert: ServiceDown
             expr: up{job=~"ride.*|user.*|dispatch.*|notification.*"} == 0
             for: 2m

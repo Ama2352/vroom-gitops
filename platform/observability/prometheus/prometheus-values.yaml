@@ -88,7 +88,7 @@ additionalPrometheusRulesMap:
               description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} stuck in {{ $labels.reason }} for 15+ min."
 
           - alert: KubernetesPodNotReady
-            expr: kube_pod_status_ready{condition="true",namespace=~"vroom-.*|monitoring|platform"} == 0
+            expr: kube_pod_status_ready{condition="true",namespace=~"vroom-.*|monitoring|platform"} == 0 and on(pod, namespace) kube_pod_status_phase{phase="Running"} == 1
             for: 2m
             labels:
               severity: warning

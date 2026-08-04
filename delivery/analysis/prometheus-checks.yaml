@@ -12,8 +12,8 @@ spec:
         prometheus:
           address: http://kube-prometheus-stack-prometheus.monitoring:9090/prometheus
           query: |
-            (100 * sum(rate(http_requests_total{status=~"5..",namespace="{{args.target-namespace}}"}[10m]))
-            / sum(rate(http_requests_total{namespace="{{args.target-namespace}}"}[10m]))) or vector(0)
+            (100 * sum(rate(gin_requests_total{code=~"5..",namespace="{{args.target-namespace}}"}[10m]))
+            / clamp_min(sum(rate(gin_requests_total{namespace="{{args.target-namespace}}"}[10m])), 0.01))
       successCondition: result[0] < 1.0
       failureCondition: result[0] >= 5.0
       failureLimit: 2
@@ -26,7 +26,7 @@ spec:
           address: http://kube-prometheus-stack-prometheus.monitoring:9090/prometheus
           query: |
             histogram_quantile(0.99, sum by (le) (
-              rate(http_request_duration_seconds_bucket{namespace="{{args.target-namespace}}"}[10m])
+              rate(gin_request_duration_seconds_bucket{namespace="{{args.target-namespace}}"}[10m])
             )) or vector(0)
       successCondition: result[0] < 2.0
       failureCondition: result[0] >= 5.0

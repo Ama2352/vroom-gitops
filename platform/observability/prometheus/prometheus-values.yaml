@@ -108,6 +108,51 @@ additionalPrometheusRulesMap:
               summary: "Service {{ $labels.job }} is DOWN"
               description: "Service {{ $labels.job }} in {{ $labels.namespace }} unreachable for 2 min."
 
+          - alert: HighErrorRate
+            expr: |
+              100 * sum by (namespace, service) (rate(gin_requests_total{code=~"5..",namespace=~"vroom-.*"}[5m]))
+                / clamp_min(sum by (namespace, service) (rate(gin_requests_total{namespace=~"vroom-.*"}[5m])), 0.01) > 5
+              and on(namespace, service)
+                sum by (namespace, service) (rate(gin_requests_total{namespace=~"vroom-.*"}[5m])) > 0.1
+            for: 2m
+            labels:
+              severity: warning
+              component: application
+              threshold: "5"
+            annotations:
+              summary: "High HTTP error rate on {{ $labels.service }}"
+              metric_value: "{{ $value }}"
+              threshold: "5"
+
+          - alert: HighLatency
+            expr: |
+              histogram_quantile(0.99,
+                sum by (namespace, service, le) (rate(gin_request_duration_seconds_bucket{namespace=~"vroom-.*"}[5m]))) > 2
+              and on(namespace, service)
+                sum by (namespace, service) (rate(gin_requests_total{namespace=~"vroom-.*"}[5m])) > 0.1
+            for: 2m
+            labels:
+              severity: warning
+              component: application
+              threshold: "2"
+            annotations:
+              summary: "High p99 latency on {{ $labels.service }}"
+              metric_value: "{{ $value }}"
+              threshold: "2"
+
+          - alert: DLQEventsDetected
+            expr: |
+              sum by (namespace, service) (
+                increase(vroom_dlq_events_total{namespace=~"vroom-.*"}[5m])
+                or increase(vroom_notification_dlq_events_total{namespace=~"vroom-.*"}[5m])
+              ) > 0
+            labels:
+              severity: warning
+              component: application
+            annotations:
+              summary: "Dead-letter events detected for {{ $labels.service }}"
+              metric_value: "{{ $value }}"
+
 grafana:
   adminPassword: "ChangeMeToSecurePassword!"
 

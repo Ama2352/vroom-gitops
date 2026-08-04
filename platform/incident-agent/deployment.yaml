@@ -29,6 +29,8 @@ spec:
           value: "http://loki-stack.monitoring.svc.cluster.local:3100/loki/api/v1/query_range"
         - name: TEMPO_URL
           value: "http://tempo.monitoring.svc.cluster.local:3100"
+        - name: GRAFANA_BASE_URL
+          value: "http://192.168.242.10/grafana"
         - name: GITHUB_REPO
           value: "Ama2352/vroom-services"
         - name: DOCS_DIR

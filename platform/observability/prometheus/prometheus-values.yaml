@@ -143,8 +143,8 @@ additionalPrometheusRulesMap:
           - alert: DLQEventsDetected
             expr: |
               sum by (namespace, service) (
-                increase(vroom_dlq_events_total{namespace=~"vroom-.*"}[5m])
-                or increase(vroom_notification_dlq_events_total{namespace=~"vroom-.*"}[5m])
+                vroom_dlq_events_total{namespace=~"vroom-.*"}
+                or vroom_notification_dlq_events_total{namespace=~"vroom-.*"}
               ) > 0
             labels:
               severity: warning

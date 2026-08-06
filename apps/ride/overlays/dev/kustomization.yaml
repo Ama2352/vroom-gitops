@@ -6,6 +6,7 @@ resources:
 namespace: vroom-dev
 patches:
 - path: patches/resource_limits.yaml
+- path: patches/event-contract-v2.yaml
 labels:
 - pairs:
     env: dev

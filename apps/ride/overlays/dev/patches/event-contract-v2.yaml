@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ride-service
+spec:
+  template:
+    spec:
+      containers:
+        - name: ride-service
+          env:
+            - name: EVENT_CONTRACT_VERSION
+              value: v2

@@ -149,9 +149,11 @@ additionalPrometheusRulesMap:
             labels:
               severity: warning
               component: application
+              incident_kind: dlq
             annotations:
               summary: "Dead-letter events detected for {{ $labels.service }}"
               metric_value: "{{ $value }}"
+              threshold: "0"
 
 grafana:
   adminPassword: "ChangeMeToSecurePassword!"

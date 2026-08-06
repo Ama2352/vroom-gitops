@@ -19,3 +19,9 @@ class PromQLContractTest(unittest.TestCase):
         self.assertIn("gin_requests_total", kargo)
         self.assertIn("gin_request_duration_seconds_bucket", kargo)
         self.assertNotIn("http_requests_total", kargo)
+
+    def test_dlq_alert_has_stable_incident_kind_and_threshold(self):
+        values = (ROOT / "platform/observability/prometheus/prometheus-values.yaml").read_text()
+        block = values.split("- alert: DLQEventsDetected", 1)[1].split("- alert:", 1)[0]
+        self.assertIn("incident_kind: dlq", block)
+        self.assertIn('threshold: "0"', block)

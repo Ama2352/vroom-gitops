@@ -61,6 +61,8 @@ spec:
               value: "tempo.monitoring.svc.cluster.local:4317"
             - name: OTEL_SERVICE_NAME
               value: "ride-service"
+            - name: EVENT_CONTRACT_VERSION
+              value: "v1"
           livenessProbe:
             httpGet:
               path: /healthz

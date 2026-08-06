@@ -26,9 +26,8 @@ class PromQLContractTest(unittest.TestCase):
         self.assertIn("incident_kind: dlq", block)
         self.assertIn('threshold: "0"', block)
 
-    def test_dlq_alert_detects_the_first_counter_sample(self):
+    def test_dlq_alert_uses_a_bounded_counter_increase(self):
         values = (ROOT / "platform/observability/prometheus/prometheus-values.yaml").read_text()
         block = values.split("- alert: DLQEventsDetected", 1)[1].split("- alert:", 1)[0]
-        self.assertIn("vroom_dlq_events_total{namespace=~\"vroom-.*\"}", block)
+        self.assertIn("increase(vroom_dlq_events_total{namespace=~\"vroom-.*\"}[5m])", block)
         self.assertIn(") > 0", block)
-        self.assertNotIn("increase(", block)

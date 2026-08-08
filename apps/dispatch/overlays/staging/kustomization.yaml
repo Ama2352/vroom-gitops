@@ -12,4 +12,4 @@ labels:
 images:
 - name: vroom-mvp/dispatch-service
   newName: ghcr.io/ama2352/vroom-mvp-dispatch-service
-  newTag: v1.0.0-build.z.108.64c2ab05
+  newTag: v1.0.0-build.z.113.d0cb5eca

@@ -31,10 +31,6 @@ spec:
           value: "http://tempo.monitoring.svc.cluster.local:3100"
         - name: GRAFANA_BASE_URL
           value: "http://192.168.242.10/grafana"
-        - name: GITHUB_GITOPS_REPO
-          value: "Ama2352/vroom-gitops"
-        - name: GITHUB_SERVICES_REPO
-          value: "Ama2352/vroom-services"
         - name: DOCS_DIR
           value: "/docs"
         - name: PYTHONUNBUFFERED
@@ -60,16 +56,6 @@ spec:
             secretKeyRef:
               name: kubectl-executor-secret
               key: EXECUTOR_API_KEY
-        - name: GITHUB_GITOPS_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: github-token-secret
-              key: GITHUB_GITOPS_TOKEN
-        - name: GITHUB_SERVICES_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: github-token-secret
-              key: GITHUB_SERVICES_TOKEN
         resources:
           requests:
             memory: "200Mi"
